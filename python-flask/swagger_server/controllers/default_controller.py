@@ -19,19 +19,6 @@ def delete_tosca_template_by_id(id, node_names=None):  # noqa: E501
     return 'do some magic!'
 
 
-def deploy_provision_tosca_template_by_id(id):  # noqa: E501
-    """deploy the software tosca template
-
-    Returns the deployment ID # noqa: E501
-
-    :param id: ID of topolog template to deploy
-    :type id: str
-
-    :rtype: str
-    """
-    return 'do some magic!'
-
-
 def get_tosca_template_by_id(id):  # noqa: E501
     """Find topolog template by ID
 
@@ -52,49 +39,6 @@ def get_tosca_template_i_ds():  # noqa: E501
 
 
     :rtype: List[str]
-    """
-    return 'do some magic!'
-
-
-def plan_tosca_template_by_id(id):  # noqa: E501
-    """plan tosca template
-
-    Returns the ID of the planed topolog template # noqa: E501
-
-    :param id: ID of topolog template to plan
-    :type id: str
-
-    :rtype: str
-    """
-    return 'do some magic!'
-
-
-def provision_plan_tosca_template_by_id(id):  # noqa: E501
-    """provision tosca template
-
-    deletes the provisioned Infrastructure # noqa: E501
-
-    :param id: ID of topolog template to plan
-    :type id: str
-
-    :rtype: str
-    """
-    return 'do some magic!'
-
-
-def scale_provisioned_tosca_template_by_id(id, node_name, node_num):  # noqa: E501
-    """scale tosca template
-
-     # noqa: E501
-
-    :param id: ID of topolog template to scale
-    :type id: str
-    :param node_name: The node to scale
-    :type node_name: str
-    :param node_num: The number of nodes to scale
-    :type node_num: int
-
-    :rtype: str
     """
     return 'do some magic!'
 
