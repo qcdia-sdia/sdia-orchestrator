@@ -1,0 +1,327 @@
+---
+swagger: "2.0"
+info:
+  description: "sdia-manager allows application developers to plan a customized virtual\
+    \ infrastructure based on application level constraints on QoS and resource budgets,\
+    \ provisioning the virtual infrastructure, deploy application components onto\
+    \ the virtual infrastructure, and start execution on demand using TOSCA."
+  version: "0.1"
+  title: "qcm-api"
+  contact:
+    email: "z.zhao@uva.nl"
+  license:
+    name: "Apache 2.0"
+    url: "http://www.apache.org/licenses/LICENSE-2.0.html"
+basePath: "/qcm-api/3.0"
+schemes:
+- "http"
+paths:
+  /tosca_template:
+    post:
+      summary: "upload a tosca template description file"
+      description: "uploads and validates TOSCA template file"
+      operationId: "upload_tosca_template"
+      consumes:
+      - "multipart/form-data"
+      parameters:
+      - name: "file"
+        in: "formData"
+        description: "tosca Template description"
+        required: true
+        type: "file"
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            type: "string"
+        "405":
+          description: "Invalid input"
+      security:
+      - auth:
+        - "write:ToscaTemplate"
+        - "read:ToscaTemplate"
+      x-swagger-router-controller: "swagger_server.controllers.default_controller"
+  /tosca_template/ids:
+    get:
+      summary: "Get all topolog template IDs"
+      description: "Returns all IDs"
+      operationId: "get_tosca_template_i_ds"
+      produces:
+      - "application/json"
+      parameters: []
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            type: "array"
+            items:
+              type: "string"
+        "400":
+          description: "Invalid ID supplied"
+        "404":
+          description: "ToscaTemplate not found"
+        "405":
+          description: "Invalid input"
+      security:
+      - auth:
+        - "write:ToscaTemplate"
+        - "read:ToscaTemplate"
+      x-swagger-router-controller: "swagger_server.controllers.default_controller"
+  /tosca_template/{id}:
+    get:
+      summary: "Find topolog template by ID"
+      description: "Returns a single topolog template"
+      operationId: "get_tosca_template_by_id"
+      produces:
+      - "text/plain"
+      parameters:
+      - name: "id"
+        in: "path"
+        description: "ID of topolog template to return"
+        required: true
+        type: "string"
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            type: "string"
+        "400":
+          description: "Invalid ID supplied"
+        "404":
+          description: "ToscaTemplate not found"
+        "405":
+          description: "Invalid input"
+      security:
+      - auth:
+        - "write:ToscaTemplate"
+        - "read:ToscaTemplate"
+      x-swagger-router-controller: "swagger_server.controllers.default_controller"
+    put:
+      summary: "Updates exisintg topolog template"
+      description: ""
+      operationId: "update_tosca_template_by_id"
+      consumes:
+      - "multipart/form-data"
+      produces:
+      - "text/plain"
+      parameters:
+      - name: "file"
+        in: "formData"
+        description: "tosca Template description"
+        required: false
+        type: "file"
+      - name: "id"
+        in: "path"
+        description: "ID of topolog template to return"
+        required: true
+        type: "string"
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            type: "string"
+        "400":
+          description: "Invalid ID supplied"
+        "404":
+          description: "ToscaTemplate not found"
+        "405":
+          description: "Invalid input"
+      security:
+      - auth:
+        - "write:ToscaTemplate"
+        - "read:ToscaTemplate"
+      x-swagger-router-controller: "swagger_server.controllers.default_controller"
+    delete:
+      summary: "Deletes a tosca topology template"
+      description: "If the topology is provisoned it will delete the provison (Infrastructure).\
+        \ If it is deployed it will delete the deploymet too (Application)"
+      operationId: "delete_tosca_template_by_id"
+      parameters:
+      - name: "id"
+        in: "path"
+        description: "ID of topology template to return"
+        required: true
+        type: "string"
+      - name: "node_names"
+        in: "query"
+        description: "The node(s) to delete"
+        required: false
+        type: "array"
+        items:
+          type: "string"
+        collectionFormat: "multi"
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            type: "string"
+        "400":
+          description: "Invalid ID supplied"
+        "404":
+          description: "ToscaTemplate not found"
+      security:
+      - auth:
+        - "write:ToscaTemplate"
+        - "read:ToscaTemplate"
+      x-swagger-router-controller: "swagger_server.controllers.default_controller"
+  /planner/plan/{id}:
+    get:
+      summary: "plan tosca template"
+      description: "Returns the ID of the planed topolog template"
+      operationId: "plan_tosca_template_by_id"
+      produces:
+      - "text/plain"
+      parameters:
+      - name: "id"
+        in: "path"
+        description: "ID of topolog template to plan"
+        required: true
+        type: "string"
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            type: "string"
+        "400":
+          description: "Invalid ID supplied"
+        "404":
+          description: "ToscaTemplate not found"
+        "405":
+          description: "Invalid input"
+      security:
+      - auth:
+        - "write:ToscaTemplate"
+        - "read:ToscaTemplate"
+      x-swagger-router-controller: "swagger_server.controllers.default_controller"
+  /provisioner/provision/{id}:
+    get:
+      summary: "provision tosca template"
+      description: "deletes the provisioned Infrastructure"
+      operationId: "provision_plan_tosca_template_by_id"
+      produces:
+      - "text/plain"
+      parameters:
+      - name: "id"
+        in: "path"
+        description: "ID of topolog template to plan"
+        required: true
+        type: "string"
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            type: "string"
+        "400":
+          description: "Invalid ID supplied"
+        "404":
+          description: "ToscaTemplate not found"
+        "405":
+          description: "Invalid input"
+      security:
+      - auth:
+        - "write:ToscaTemplate"
+        - "read:ToscaTemplate"
+      x-swagger-router-controller: "swagger_server.controllers.default_controller"
+  /scaler/{id}:
+    get:
+      summary: "scale tosca template"
+      operationId: "scale_provisioned_tosca_template_by_id"
+      produces:
+      - "text/plain"
+      parameters:
+      - name: "id"
+        in: "path"
+        description: "ID of topolog template to scale"
+        required: true
+        type: "string"
+      - name: "node_name"
+        in: "query"
+        description: "The node to scale"
+        required: true
+        type: "string"
+      - name: "node_num"
+        in: "query"
+        description: "The number of nodes to scale"
+        required: true
+        type: "integer"
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            type: "string"
+        "400":
+          description: "Invalid ID supplied"
+        "404":
+          description: "ToscaTemplate not found"
+        "405":
+          description: "Invalid input"
+      security:
+      - auth:
+        - "write:ToscaTemplate"
+        - "read:ToscaTemplate"
+      x-swagger-router-controller: "swagger_server.controllers.default_controller"
+  /deployer/deploy/{id}:
+    get:
+      summary: "deploy the software tosca template"
+      description: "Returns the deployment ID"
+      operationId: "deploy_provision_tosca_template_by_id"
+      produces:
+      - "text/plain"
+      parameters:
+      - name: "id"
+        in: "path"
+        description: "ID of topolog template to deploy"
+        required: true
+        type: "string"
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            type: "string"
+        "400":
+          description: "Invalid ID supplied"
+        "404":
+          description: "ToscaTemplate not found"
+        "405":
+          description: "Invalid input"
+      security:
+      - auth:
+        - "write:ToscaTemplate"
+        - "read:ToscaTemplate"
+      x-swagger-router-controller: "swagger_server.controllers.default_controller"
+securityDefinitions:
+  auth:
+    type: "oauth2"
+    authorizationUrl: "http://localhost/oauth/dialog"
+    flow: "implicit"
+    scopes:
+      write:ToscaTemplate: "modify topolog template in your account"
+      read:ToscaTemplate: "read your topolog template"
+      admin:User: "Grants access to admin operations"
+      write:Credentials: "modify cloud credentials in your account"
+      read:Credentials: "read your cloud credentials"
+definitions:
+  Credential: {}
+  NodeTemplate: {}
+  TopologyTemplate: {}
+  ToscaTemplate: {}
+  CloudsStormTopTopology: {}
+  DB: {}
+  DBInfo: {}
+  DCMetaInfo: {}
+  VMMetaInfo: {}
+  CloudsStormVMs: {}
+  CloudCredentialDB: {}
+  CredentialInfo: {}
+  NodeTemplateMap: {}
+  Provisioner:
+    type: "object"
+    properties:
+      name:
+        type: "string"
+      version:
+        type: "string"
+      description:
+        type: "string"
+      tosca_interface_type:
+        type: "string"
