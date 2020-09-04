@@ -3,13 +3,13 @@ swagger: "2.0"
 info:
   description: sdia-manager allows application developers to plan a customized virtual infrastructure based on application level constraints on QoS and resource budgets, provisioning the virtual infrastructure, deploy application components onto the virtual infrastructure, and start execution on demand using TOSCA.
   version: "0.1"
-  title: qcm-api
+  title: sdia-manager
   contact:
-    email: z.zhao@uva.nl
+    email: S.Koulouzis@uva.nl
   license:
     name: Apache 2.0
     url: http://www.apache.org/licenses/LICENSE-2.0.html
-basePath: /qcm-api/3.0
+basePath: /sdia-manager/3.0
 schemes:
 - http
 paths:
@@ -33,10 +33,6 @@ paths:
             type: string
         "405":
           description: Invalid input
-      security:
-      - auth:
-        - write:ToscaTemplate
-        - read:ToscaTemplate
   /tosca_template/ids:
     get:
       summary: Get all topolog template IDs
@@ -58,10 +54,6 @@ paths:
           description: ToscaTemplate not found
         "405":
           description: Invalid input
-      security:
-      - auth:
-        - write:ToscaTemplate
-        - read:ToscaTemplate
   /tosca_template/{id}:
     get:
       summary: Find topolog template by ID
@@ -86,10 +78,6 @@ paths:
           description: ToscaTemplate not found
         "405":
           description: Invalid input
-      security:
-      - auth:
-        - write:ToscaTemplate
-        - read:ToscaTemplate
     put:
       summary: Updates exisintg topolog template
       description: ""
@@ -120,10 +108,6 @@ paths:
           description: ToscaTemplate not found
         "405":
           description: Invalid input
-      security:
-      - auth:
-        - write:ToscaTemplate
-        - read:ToscaTemplate
     delete:
       summary: Deletes a tosca topology template
       description: If the topology is provisoned it will delete the provison (Infrastructure). If it is deployed it will delete the deploymet too (Application)
@@ -151,21 +135,6 @@ paths:
           description: Invalid ID supplied
         "404":
           description: ToscaTemplate not found
-      security:
-      - auth:
-        - write:ToscaTemplate
-        - read:ToscaTemplate
-securityDefinitions:
-  auth:
-    type: oauth2
-    authorizationUrl: http://localhost/oauth/dialog
-    flow: implicit
-    scopes:
-      write:ToscaTemplate: modify topolog template in your account
-      read:ToscaTemplate: read your topolog template
-      admin:User: Grants access to admin operations
-      write:Credentials: modify cloud credentials in your account
-      read:Credentials: read your cloud credentials
 definitions:
   Credential: {}
   NodeTemplate: {}
