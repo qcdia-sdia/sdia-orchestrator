@@ -18,10 +18,10 @@ REQUIRES = ["connexion"]
 setup(
     name=NAME,
     version=VERSION,
-    description="qcm-api",
-    author_email="z.zhao@uva.nl",
+    description="sdia-manager",
+    author_email="S.Koulouzis@uva.nl",
     url="",
-    keywords=["Swagger", "qcm-api"],
+    keywords=["Swagger", "sdia-manager"],
     install_requires=REQUIRES,
     packages=find_packages(),
     package_data={'': ['swagger/swagger.yaml']},
