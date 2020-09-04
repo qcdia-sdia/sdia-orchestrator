@@ -6,13 +6,13 @@ info:
     \ provisioning the virtual infrastructure, deploy application components onto\
     \ the virtual infrastructure, and start execution on demand using TOSCA."
   version: "0.1"
-  title: "qcm-api"
+  title: "sdia-manager"
   contact:
-    email: "z.zhao@uva.nl"
+    email: "S.Koulouzis@uva.nl"
   license:
     name: "Apache 2.0"
     url: "http://www.apache.org/licenses/LICENSE-2.0.html"
-basePath: "/qcm-api/3.0"
+basePath: "/sdia-manager/3.0"
 schemes:
 - "http"
 paths:
@@ -36,10 +36,6 @@ paths:
             type: "string"
         "405":
           description: "Invalid input"
-      security:
-      - auth:
-        - "write:ToscaTemplate"
-        - "read:ToscaTemplate"
       x-swagger-router-controller: "swagger_server.controllers.default_controller"
   /tosca_template/ids:
     get:
@@ -62,10 +58,6 @@ paths:
           description: "ToscaTemplate not found"
         "405":
           description: "Invalid input"
-      security:
-      - auth:
-        - "write:ToscaTemplate"
-        - "read:ToscaTemplate"
       x-swagger-router-controller: "swagger_server.controllers.default_controller"
   /tosca_template/{id}:
     get:
@@ -91,10 +83,6 @@ paths:
           description: "ToscaTemplate not found"
         "405":
           description: "Invalid input"
-      security:
-      - auth:
-        - "write:ToscaTemplate"
-        - "read:ToscaTemplate"
       x-swagger-router-controller: "swagger_server.controllers.default_controller"
     put:
       summary: "Updates exisintg topolog template"
@@ -126,10 +114,6 @@ paths:
           description: "ToscaTemplate not found"
         "405":
           description: "Invalid input"
-      security:
-      - auth:
-        - "write:ToscaTemplate"
-        - "read:ToscaTemplate"
       x-swagger-router-controller: "swagger_server.controllers.default_controller"
     delete:
       summary: "Deletes a tosca topology template"
@@ -159,22 +143,7 @@ paths:
           description: "Invalid ID supplied"
         "404":
           description: "ToscaTemplate not found"
-      security:
-      - auth:
-        - "write:ToscaTemplate"
-        - "read:ToscaTemplate"
       x-swagger-router-controller: "swagger_server.controllers.default_controller"
-securityDefinitions:
-  auth:
-    type: "oauth2"
-    authorizationUrl: "http://localhost/oauth/dialog"
-    flow: "implicit"
-    scopes:
-      write:ToscaTemplate: "modify topolog template in your account"
-      read:ToscaTemplate: "read your topolog template"
-      admin:User: "Grants access to admin operations"
-      write:Credentials: "modify cloud credentials in your account"
-      read:Credentials: "read your cloud credentials"
 definitions:
   Credential: {}
   NodeTemplate: {}

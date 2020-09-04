@@ -18,7 +18,7 @@ class TestDefaultController(BaseTestCase):
         """
         query_string = [('node_names', 'node_names_example')]
         response = self.client.open(
-            '/qcm-api/3.0/tosca_template/{id}'.format(id='id_example'),
+            '/sdia-manager/3.0/tosca_template/{id}'.format(id='id_example'),
             method='DELETE',
             query_string=query_string)
         self.assert200(response,
@@ -30,7 +30,7 @@ class TestDefaultController(BaseTestCase):
         Find topolog template by ID
         """
         response = self.client.open(
-            '/qcm-api/3.0/tosca_template/{id}'.format(id='id_example'),
+            '/sdia-manager/3.0/tosca_template/{id}'.format(id='id_example'),
             method='GET')
         self.assert200(response,
                        'Response body is : ' + response.data.decode('utf-8'))
@@ -41,7 +41,7 @@ class TestDefaultController(BaseTestCase):
         Get all topolog template IDs
         """
         response = self.client.open(
-            '/qcm-api/3.0/tosca_template/ids',
+            '/sdia-manager/3.0/tosca_template/ids',
             method='GET')
         self.assert200(response,
                        'Response body is : ' + response.data.decode('utf-8'))
@@ -53,7 +53,7 @@ class TestDefaultController(BaseTestCase):
         """
         data = dict(file=(BytesIO(b'some file data'), 'file.txt'))
         response = self.client.open(
-            '/qcm-api/3.0/tosca_template/{id}'.format(id='id_example'),
+            '/sdia-manager/3.0/tosca_template/{id}'.format(id='id_example'),
             method='PUT',
             data=data,
             content_type='multipart/form-data')
@@ -67,7 +67,7 @@ class TestDefaultController(BaseTestCase):
         """
         data = dict(file=(BytesIO(b'some file data'), 'file.txt'))
         response = self.client.open(
-            '/qcm-api/3.0/tosca_template',
+            '/sdia-manager/3.0/tosca_template',
             method='POST',
             data=data,
             content_type='multipart/form-data')
