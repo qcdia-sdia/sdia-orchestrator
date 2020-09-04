@@ -1,4 +1,4 @@
-# sdia-manager
+# sdia-orchestrator
 Software Defined Infrastructure Automator orchestrator.
 
 
