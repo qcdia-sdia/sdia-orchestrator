@@ -32,3 +32,4 @@ The architecture contains the following services:
 
 
 ## Architecture 
+![SDIA Architecture](https://raw.githubusercontent.com/qcdia-sdia/sdia-orchestrator/master/images/Untitled%20drawing.png)
