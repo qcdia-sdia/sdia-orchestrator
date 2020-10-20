@@ -15,7 +15,7 @@ The Orchestrator also executes imperative workflows which are manually specified
 All components of this architecture are build as docker containers. 
 To quickly run the engine use this [docker-compose.yaml](./blob/master/docker-compose.yml)
 ```
-sudo docker stack deploy qcdie -c docker-compose.yml
+sudo docker stack deploy sdia -c docker-compose.yml
 ```
 
 ### Services
