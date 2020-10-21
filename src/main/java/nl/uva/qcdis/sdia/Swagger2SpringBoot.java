@@ -1,22 +1,14 @@
 package nl.uva.qcdis.sdia;
 
-import java.net.URI;
 import nl.uva.qcdis.sdia.dao.ToscaTemplateDAO;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.ExitCodeGenerator;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.annotation.PropertySources;
 import org.springframework.data.mongodb.repository.config.EnableMongoRepositories;
-import org.springframework.web.servlet.function.HandlerFunction;
-import static org.springframework.web.servlet.function.RequestPredicates.GET;
-import org.springframework.web.servlet.function.RouterFunction;
-import static org.springframework.web.servlet.function.RouterFunctions.route;
-import org.springframework.web.servlet.function.ServerRequest;
-import org.springframework.web.servlet.function.ServerResponse;
 
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
@@ -40,8 +32,6 @@ public class Swagger2SpringBoot implements CommandLineRunner {
     public static void main(String[] args) throws Exception {
         new SpringApplication(Swagger2SpringBoot.class).run(args);
     }
-
-
 
     class ExitException extends RuntimeException implements ExitCodeGenerator {
 
