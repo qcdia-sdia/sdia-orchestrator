@@ -144,4 +144,15 @@
        
         
     </dependencies>
+    
+    <repositories>    
+        <repository>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+            <id>releases</id>
+            <url>https://raw.githubusercontent.com/skoulouzis/mvn-repo/master/releases</url>
+        </repository>
+      
+    </repositories>    
 </project>
