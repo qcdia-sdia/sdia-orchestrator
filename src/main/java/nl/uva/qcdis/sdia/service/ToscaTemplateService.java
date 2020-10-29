@@ -14,13 +14,17 @@ import com.fasterxml.jackson.dataformat.yaml.YAMLGenerator.Feature;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.logging.Level;
 import nl.uva.qcdis.sdia.api.NotFoundException;
 import nl.uva.qcdis.sdia.dao.ToscaTemplateDAO;
 import nl.uva.qcdis.sdia.model.Exceptions.TypeExeption;
+import nl.uva.qcdis.sdia.model.NodeTemplate;
 import nl.uva.qcdis.sdia.model.tosca.ToscaTemplate;
 import nl.uva.qcdis.sdia.sure.tosca.client.ApiException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -42,7 +46,6 @@ public class ToscaTemplateService {
 
     @Autowired
     private ToscaTemplateDAO dao;
-
 
     public String save(ToscaTemplate tt) {
         dao.save(tt);
@@ -71,15 +74,23 @@ public class ToscaTemplateService {
         return save(tt);
     }
 
-    public String findByID(String id) throws JsonProcessingException, NotFoundException {
+    public ToscaTemplate findToscaTemplateByID(String id) throws JsonProcessingException, NotFoundException {
         ToscaTemplate tt = dao.findById(id).get();
         if (tt == null) {
             java.util.logging.Logger.getLogger(ToscaTemplateService.class.getName()).log(Level.SEVERE, "ToscaTemplate with id: " + id + " not found");
             throw new NotFoundException(404, "ToscaTemplate with id: " + id + " not found");
         }
-        String ymlStr = objectMapper.writeValueAsString(tt);
+        return tt;
+    }
+    
+        
+        
+    public String findByID(String id) throws JsonProcessingException, NotFoundException {
+        String ymlStr = objectMapper.writeValueAsString(findToscaTemplateByID(id));
         return ymlStr;
     }
+    
+
 
     public void deleteByID(String id) throws JsonProcessingException, NotFoundException, IOException, ApiException, TypeExeption {
         ToscaTemplate toscaTemplate = getYaml2ToscaTemplate(findByID(id));
@@ -101,6 +112,46 @@ public class ToscaTemplateService {
 
     public ToscaTemplate getYaml2ToscaTemplate(String ymlStr) throws IOException {
         return objectMapper.readValue(ymlStr, ToscaTemplate.class);
+    }
+
+    public List<String> findNodeIDs(Map<String, String> filters) throws JsonProcessingException {
+        List<ToscaTemplate> all = dao.findAll();
+        List<String> matches = new ArrayList<>();
+        for (ToscaTemplate toscaTemplate : all) {
+            Map<String, NodeTemplate> nodeTemplates = toscaTemplate.getTopologyTemplate().getNodeTemplates();
+            Set<String> keys = nodeTemplates.keySet();
+            for (String key : keys) {
+                NodeTemplate node = nodeTemplates.get(key);
+                Set<Map.Entry<String, String>> set = filters.entrySet();
+                for (Map.Entry<String, String> entry : set) {
+                    if (matches(node, entry)) {
+                        matches.add(toscaTemplate.getId());
+                        break;
+                    }
+                }
+            }
+        }
+        return matches;
+    }
+
+    private boolean matches(NodeTemplate node, Map.Entry<String, String> entry) {
+        switch(entry.getKey()){
+            case "nodeType":
+             if(node.getType().equals(entry.getValue())){
+                 return true;
+             }
+             return false;
+             case "currentState":
+                 if(node.getAttributes() !=null && 
+                         node.getAttributes().containsKey("current_state") &&
+                         node.getAttributes().get("current_state") !=null &&
+                         node.getAttributes().get("current_state").equals(entry.getValue())){
+                     return true;
+                 }
+                 return false;
+             default:
+                 return false;      
+        }
     }
 
 }

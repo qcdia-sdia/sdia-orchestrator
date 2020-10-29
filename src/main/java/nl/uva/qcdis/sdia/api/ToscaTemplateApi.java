@@ -96,6 +96,30 @@ public interface ToscaTemplateApi {
             produces = {"application/json"},
             method = RequestMethod.GET)
     ResponseEntity<List<String>> getToscaTemplateIDs();
+    
+    
+    
+    
+    @ApiOperation(value = "Get topolog templates ", nickname = "getToscaTemplate", notes = "Returns templates", 
+            response = String.class, responseContainer = "List", authorizations = {
+        @Authorization(value = "auth", scopes = {
+            @AuthorizationScope(scope = "read:ToscaTemplate", description = "read your topolog template")
+            ,
+            @AuthorizationScope(scope = "write:ToscaTemplate", description = "modify topolog template in your account")
+        })
+    }, tags = {})
+    @ApiResponses(value = {
+        @ApiResponse(code = 200, message = "successful operation", response = String.class, responseContainer = "List")
+        ,
+        @ApiResponse(code = 400, message = "Invalid query supplied")
+        ,
+        @ApiResponse(code = 404, message = "ToscaTemplate not found")
+        ,
+        @ApiResponse(code = 405, message = "Invalid input")})
+    @RequestMapping(value = "/orchestrator/tosca_template/",
+            produces = {"application/json"},
+            method = RequestMethod.GET)
+    ResponseEntity<List<String>> getToscaTemplateID(@RequestParam(required = false) String nodeType,@RequestParam(required = false) String currentState);    
 
     @ApiOperation(value = "Updates exisintg topolog template", nickname = "updateToscaTemplateByID", notes = "", response = String.class, authorizations = {
         @Authorization(value = "auth", scopes = {
