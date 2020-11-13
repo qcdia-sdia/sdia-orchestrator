@@ -63,6 +63,26 @@
                     </execution>
                 </executions>
             </plugin>
+            
+            <plugin>
+                <groupId>org.jacoco</groupId>
+                <artifactId>jacoco-maven-plugin</artifactId>
+                <version>0.8.6</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>prepare-agent</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>report</id>
+                        <phase>test</phase>
+                        <goals>
+                            <goal>report</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>            
         </plugins>
     </build>
     <dependencies>
@@ -120,8 +140,7 @@
         <dependency>
             <groupId>nl.uva.qcdis.sdia</groupId>
             <artifactId>sdia-commons</artifactId>
-            <version>1.0.0</version>
-            <type>jar</type>
+            <version>1.0.3</version>
         </dependency>
         
         <dependency>
@@ -144,7 +163,7 @@
        
         
     </dependencies>
-    
+    <!--    
     <repositories>    
         <repository>
             <snapshots>
@@ -154,5 +173,5 @@
             <url>https://raw.githubusercontent.com/skoulouzis/mvn-repo/master/releases</url>
         </repository>
       
-    </repositories>    
+    </repositories>    -->
 </project>

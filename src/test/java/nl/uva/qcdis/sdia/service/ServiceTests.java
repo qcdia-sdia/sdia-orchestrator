@@ -346,8 +346,8 @@ public class ServiceTests {
                 for (String name : names) {
                     NodeTemplate node = nt.get(name);
                     if (node.getAttributes() != null
-                            && node.getAttributes().containsKey("currentState")
-                            && node.getAttributes().get("currentState").equals(currentState)) {
+                            && node.getAttributes().containsKey("current_state")
+                            && node.getAttributes().get("current_state").equals(currentState)) {
                         foundTState = true;
                         break;
                     }
@@ -375,8 +375,8 @@ public class ServiceTests {
                 for (String name : names) {
                     NodeTemplate node = nt.get(name);
                     if (node.getAttributes() != null
-                            && node.getAttributes().containsKey("currentState")
-                            && node.getAttributes().get("currentState").equals(currentState)) {
+                            && node.getAttributes().containsKey("current_state")
+                            && node.getAttributes().get("current_state").equals(currentState)) {
                         foundTState = true;
                     }
                     if (node.getType().equals(nodeType)) {
