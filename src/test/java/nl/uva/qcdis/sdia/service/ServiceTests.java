@@ -270,7 +270,7 @@ public class ServiceTests {
     public void testToscaTemplateServiceDeleteByID() {
         if (ToscaHelper.isServiceUp(sureToscaBasePath)) {
             try {
-                Logger.getLogger(ServiceTests.class.getName()).log(Level.INFO, "deleteByID");
+                Logger.getLogger(ServiceTests.class.getName()).log(Level.INFO, "testToscaTemplateServiceDeleteByID");
                 FileInputStream in = new FileInputStream(downloadFile("https://raw.githubusercontent.com/qcdis-sdia/sdia-tosca/master/examples/application_example_updated.yaml"));
                 MultipartFile file = new MockMultipartFile("file", in);
                 String id = toscaTemplateService.saveFile(file);
@@ -286,7 +286,109 @@ public class ServiceTests {
 
             }
         }
+    }
 
+    /**
+     * Test of deleteByID method, of class ToscaTemplateService.
+     *
+     * @throws java.io.IOException
+     * @throws com.fasterxml.jackson.core.JsonProcessingException
+     * @throws nl.uva.qcdis.sdia.api.NotFoundException
+     */
+    @Test
+    public void testToscaTemplateServiceFindNodeIDs() throws IOException, JsonProcessingException, NotFoundException {
+
+        Logger.getLogger(ServiceTests.class.getName()).log(Level.INFO, "testToscaTemplateServiceFindNodeIDs");
+        FileInputStream in = new FileInputStream(downloadFile("https://raw.githubusercontent.com/qcdis-sdia/sdia-tosca/master/examples/application_example_provisioned.yaml"));
+        MultipartFile file = new MockMultipartFile("file", in);
+        String id = toscaTemplateService.saveFile(file);
+        Assert.assertNotNull(id);
+        Map<String, String> filters = new HashMap<>();
+        String nodeType = "tosca.nodes.QC.VM.topology";
+
+        filters.put("nodeType", nodeType);
+
+        List<String> ids = toscaTemplateService.findNodeIDs(filters);
+        Assert.assertNotNull(id);
+        Assert.assertTrue(ids.size() >= 1);
+        Assert.assertTrue(ids.contains(id));
+        boolean foundType = false;
+        for (String toscaID : ids) {
+            if (toscaID.equals(id)) {
+                ToscaTemplate tt = toscaTemplateService.findToscaTemplateByID(id);
+                Map<String, NodeTemplate> nt = tt.getTopologyTemplate().getNodeTemplates();
+                Set<String> names = nt.keySet();
+                for (String name : names) {
+                    NodeTemplate node = nt.get(name);
+                    if (node.getType().equals(nodeType)) {
+                        foundType = true;
+                        break;
+                    }
+                }
+            }
+        }
+        Assert.assertTrue(foundType);
+
+        filters = new HashMap<>();
+        String currentState = "RUNNING";
+        filters.put("currentState", currentState);
+        ids = toscaTemplateService.findNodeIDs(filters);
+        Assert.assertNotNull(id);
+        Assert.assertTrue(ids.size() >= 1);
+        Assert.assertTrue(ids.contains(id));
+        boolean foundTState = false;
+
+        for (String toscaID : ids) {
+            if (toscaID.equals(id)) {
+                ToscaTemplate tt = toscaTemplateService.findToscaTemplateByID(id);
+                Map<String, NodeTemplate> nt = tt.getTopologyTemplate().getNodeTemplates();
+                Set<String> names = nt.keySet();
+                for (String name : names) {
+                    NodeTemplate node = nt.get(name);
+                    if (node.getAttributes() != null
+                            && node.getAttributes().containsKey("current_state")
+                            && node.getAttributes().get("current_state").equals(currentState)) {
+                        foundTState = true;
+                        break;
+                    }
+                }
+            }
+        }
+        Assert.assertTrue(foundTState);
+
+        filters = new HashMap<>();
+        currentState = "RUNNING";
+        filters.put("currentState", currentState);
+        filters.put("nodeType", nodeType);
+
+        ids = toscaTemplateService.findNodeIDs(filters);
+        Assert.assertNotNull(id);
+        Assert.assertTrue(ids.size() >= 1);
+        Assert.assertTrue(ids.contains(id));
+        foundTState = false;
+        foundType = false;
+        for (String toscaID : ids) {
+            if (toscaID.equals(id)) {
+                ToscaTemplate tt = toscaTemplateService.findToscaTemplateByID(id);
+                Map<String, NodeTemplate> nt = tt.getTopologyTemplate().getNodeTemplates();
+                Set<String> names = nt.keySet();
+                for (String name : names) {
+                    NodeTemplate node = nt.get(name);
+                    if (node.getAttributes() != null
+                            && node.getAttributes().containsKey("current_state")
+                            && node.getAttributes().get("current_state").equals(currentState)) {
+                        foundTState = true;
+                    }
+                    if (node.getType().equals(nodeType)) {
+                        foundType = true;
+                        break;
+                    }
+                }
+            }
+
+        }
+        Assert.assertTrue(foundTState);
+        Assert.assertTrue(foundType);
     }
 
     /**
@@ -339,9 +441,9 @@ public class ServiceTests {
         String keyStoreEncodedFromCredential = credential.getKeys().get("keystore");
         assertEquals(keyStoreEncoded, keyStoreEncodedFromCredential);
 
-                File f = File.createTempFile("copy_of_test-geni", ".jks");
+        File f = File.createTempFile("copy_of_test-geni", ".jks");
         f.deleteOnExit();
-        
+
         String copyTestCredentialPath = f.getAbsolutePath();
         Converter.decodeBase64BToFile(keyStoreEncodedFromCredential, copyTestCredentialPath);
 
