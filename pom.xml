@@ -163,15 +163,22 @@
        
         
     </dependencies>
-    <!--    
+        
     <repositories>    
-        <repository>
+<!--        <repository>
             <snapshots>
                 <enabled>false</enabled>
             </snapshots>
             <id>releases</id>
             <url>https://raw.githubusercontent.com/skoulouzis/mvn-repo/master/releases</url>
+        </repository>-->
+        
+        <repository>
+          <id>github</id>
+          <name>GitHub OWNER Apache Maven Packages</name>
+          <url>https://maven.pkg.github.com/qcdis-sdia/sdia-commons</url>
         </repository>
+        
       
-    </repositories>    -->
+    </repositories>    
 </project>
