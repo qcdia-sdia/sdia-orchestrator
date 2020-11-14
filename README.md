@@ -1,5 +1,5 @@
 ![Java CI](https://github.com/qcdis-sdia/sdia-orchestrator/workflows/Java%20CI/badge.svg?branch=master)
-![Docker](https://github.com/qcdis-sdia/sdia-orchestrator/workflows/Docker/badge.svg?branch=master)
+
 # sdia-orchestrator
 Software Defined Infrastructure Automator orchestrator.
 
