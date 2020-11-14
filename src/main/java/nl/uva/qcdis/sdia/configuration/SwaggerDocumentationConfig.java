@@ -15,7 +15,7 @@ public class SwaggerDocumentationConfig {
 
     ApiInfo apiInfo() {
         return new ApiInfoBuilder()
-            .title("CONF")
+            .title("orchestrator")
             .description("Allows application developers to seamlessly plan a customized "
                     + "virtual infrastructure based on application level constraints "
                     + "on QoS and resource budgets, provisioning the virtual infrastructure, "
