@@ -1,8 +1,8 @@
 name: Docker
 
 on:
-  push:
-    # Publish `master` as Docker `latest` image.
+  release:
+    types: [created]
     branches:
       - master
 
@@ -19,24 +19,6 @@ env:
   REPO_NAME: qcdis
 
 jobs:
-#   # Run tests.
-#   # See also https://docs.docker.com/docker-hub/builds/automated-testing/
-#   test:
-#     runs-on: ubuntu-latest
-
-#     steps:
-#       - uses: actions/checkout@v2
-
-#       - name: Run tests
-#         run: |
-#           mvn -B package --file pom.xml -Dmaven.test.skip=true && \
-#           docker build . --file Dockerfile --tag $IMAGE_NAME && \
-#           if [ -f docker-compose.test.yml ]; then
-#             docker-compose --file docker-compose.test.yml build
-#             docker-compose --file docker-compose.test.yml run sut
-#           fi
-  # Push image to GitHub Packages.
-  # See also https://docs.docker.com/docker-hub/builds/
   push:
     # Ensure test job passes before pushing image.
     runs-on: ubuntu-latest
