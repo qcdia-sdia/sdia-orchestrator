@@ -5,6 +5,7 @@ from __future__ import absolute_import
 from flask import json
 from six import BytesIO
 
+from swagger_server.models.tosca_template import ToscaTemplate  # noqa: E501
 from swagger_server.test import BaseTestCase
 
 
@@ -18,9 +19,31 @@ class TestDefaultController(BaseTestCase):
         """
         query_string = [('node_names', 'node_names_example')]
         response = self.client.open(
-            '/sdia-manager/3.0/tosca_template/{id}'.format(id='id_example'),
+            '/tosca_template/{id}'.format(id='id_example'),
             method='DELETE',
             query_string=query_string)
+        self.assert200(response,
+                       'Response body is : ' + response.data.decode('utf-8'))
+
+    def test_execute_workflow(self):
+        """Test case for execute_workflow
+
+        execute a workflow for this topolog template by ID
+        """
+        response = self.client.open(
+            '/tosca_template/{id}/workflow/execute'.format(id='id_example'),
+            method='GET')
+        self.assert200(response,
+                       'Response body is : ' + response.data.decode('utf-8'))
+
+    def test_get_plan(self):
+        """Test case for get_plan
+
+        generate a plan for this topolog template by ID
+        """
+        response = self.client.open(
+            '/tosca_template/{id}/plan'.format(id='id_example'),
+            method='GET')
         self.assert200(response,
                        'Response body is : ' + response.data.decode('utf-8'))
 
@@ -29,9 +52,11 @@ class TestDefaultController(BaseTestCase):
 
         Find topolog template by ID
         """
+        query_string = [('filter', {'key': 'filter_example'})]
         response = self.client.open(
-            '/sdia-manager/3.0/tosca_template/{id}'.format(id='id_example'),
-            method='GET')
+            '/tosca_template/{id}'.format(id='id_example'),
+            method='GET',
+            query_string=query_string)
         self.assert200(response,
                        'Response body is : ' + response.data.decode('utf-8'))
 
@@ -41,7 +66,18 @@ class TestDefaultController(BaseTestCase):
         Get all topolog template IDs
         """
         response = self.client.open(
-            '/sdia-manager/3.0/tosca_template/ids',
+            '/tosca_template/ids',
+            method='GET')
+        self.assert200(response,
+                       'Response body is : ' + response.data.decode('utf-8'))
+
+    def test_get_workflow(self):
+        """Test case for get_workflow
+
+        generate a workflow for this topolog template by ID
+        """
+        response = self.client.open(
+            '/tosca_template/{id}/workflow'.format(id='id_example'),
             method='GET')
         self.assert200(response,
                        'Response body is : ' + response.data.decode('utf-8'))
@@ -51,9 +87,9 @@ class TestDefaultController(BaseTestCase):
 
         Updates exisintg topolog template
         """
-        data = dict(file=(BytesIO(b'some file data'), 'file.txt'))
+        data = dict(file='file_example')
         response = self.client.open(
-            '/sdia-manager/3.0/tosca_template/{id}'.format(id='id_example'),
+            '/tosca_template/{id}'.format(id='id_example'),
             method='PUT',
             data=data,
             content_type='multipart/form-data')
@@ -65,9 +101,9 @@ class TestDefaultController(BaseTestCase):
 
         upload a tosca template description file
         """
-        data = dict(file=(BytesIO(b'some file data'), 'file.txt'))
+        data = dict(file='file_example')
         response = self.client.open(
-            '/sdia-manager/3.0/tosca_template',
+            '/tosca_template',
             method='POST',
             data=data,
             content_type='multipart/form-data')

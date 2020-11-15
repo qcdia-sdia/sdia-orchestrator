@@ -14,7 +14,6 @@ class Credential(Model):
 
     Do not edit the class manually.
     """
-
     def __init__(self):  # noqa: E501
         """Credential - a model defined in Swagger
 
