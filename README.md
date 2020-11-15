@@ -1,3 +1,5 @@
+![Java CI](https://github.com/qcdis-sdia/sdia-orchestrator/workflows/Java%20CI/badge.svg?branch=master)
+![Docker](https://github.com/qcdis-sdia/sdia-orchestrator/workflows/Docker/badge.svg)
 # sdia-orchestrator
 Software Defined Infrastructure Automator orchestrator.
 
@@ -15,7 +17,7 @@ The Orchestrator also executes imperative workflows which are manually specified
 All components of this architecture are build as docker containers. 
 To quickly run the engine use this [docker-compose.yaml](./blob/master/docker-compose.yml)
 ```
-sudo docker stack deploy qcdie -c docker-compose.yml
+sudo docker stack deploy sdia -c docker-compose.yml
 ```
 
 ### Services
