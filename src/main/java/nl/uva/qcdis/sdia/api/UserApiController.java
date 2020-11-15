@@ -18,10 +18,12 @@ import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.util.logging.Level;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.RestController;
 
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2019-10-10T17:15:46.465Z")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", 
+        date = "2019-10-10T17:15:46.465Z")
 
-@Controller
+@RestController
 @CrossOrigin(origins = "*")
 public class UserApiController implements UserApi {
 
@@ -88,7 +90,11 @@ public class UserApiController implements UserApi {
         String accept = request.getHeader("Accept");
         if (accept != null && accept.contains("application/json")) {
             try {
-                return new ResponseEntity<User>(objectMapper.readValue("{  \"firstName\" : \"firstName\",  \"lastName\" : \"lastName\",  \"password\" : \"password\",  \"userStatus\" : 6,  \"id\" : 0,  \"email\" : \"email\",  \"username\" : \"username\"}", User.class), HttpStatus.NOT_IMPLEMENTED);
+                return new ResponseEntity<>(objectMapper.readValue(
+                        "{  \"firstName\" : \"firstName\",  \"lastName\" : "
+                                + "\"lastName\",  \"password\" : \"password\",  "
+                                + "\"userStatus\" : 6,  \"id\" : 0,  \"email\" : "
+                                + "\"email\",  \"username\" : \"username\"}", User.class), HttpStatus.NOT_IMPLEMENTED);
             } catch (IOException e) {
                 log.error("Couldn't serialize response for content type application/json", e);
                 java.util.logging.Logger.getLogger(ProvisionerApiController.class.getName()).log(Level.SEVERE, null, e);
