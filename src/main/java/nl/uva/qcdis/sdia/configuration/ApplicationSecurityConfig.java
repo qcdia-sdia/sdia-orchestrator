@@ -15,26 +15,26 @@ import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
  *
  * @author S. Koulouzis
  */
-@Configuration
-@EnableWebSecurity
-public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter {
+//@Configuration
+//@EnableWebSecurity
+public class ApplicationSecurityConfig {//extends WebSecurityConfigurerAdapter {
 
-    @Override
-    protected void configure(HttpSecurity http) throws Exception {
-        http
-                .csrf().disable()
-                .authorizeRequests().anyRequest()
-                .authenticated()
-                .and()
-                .oauth2Login()
-                .loginPage("/oauth_login")
-                .defaultSuccessUrl("/", true)
-                .failureUrl("/oauth_login")
-                .permitAll()
-                .and()
-                .logout()
-                .logoutUrl("/logout")
-                .logoutSuccessUrl("/oauth_login").permitAll();
+//    @Override
+//    protected void configure(HttpSecurity http) throws Exception {
+//        http
+//                .csrf().disable()
+//                .authorizeRequests().anyRequest()
+//                .authenticated()
+//                .and()
+//                .oauth2Login()
+//                .loginPage("/oauth_login")
+//                .defaultSuccessUrl("/", true)
+//                .failureUrl("/oauth_login")
+//                .permitAll()
+//                .and()
+//                .logout()
+//                .logoutUrl("/logout")
+//                .logoutSuccessUrl("/oauth_login").permitAll();
 //        http
 //                .authorizeRequests(a -> a
 //                .antMatchers("/").permitAll()
@@ -45,5 +45,5 @@ public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter {
 //                .successHandler((request, response, authentication) -> {
 //                    response.sendRedirect("/");
 //                }));
-    }
+//    }
 }
