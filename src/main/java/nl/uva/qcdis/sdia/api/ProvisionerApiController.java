@@ -15,7 +15,7 @@ import javax.servlet.http.HttpServletRequest;
 import nl.uva.qcdis.sdia.model.Exceptions.MissingCredentialsException;
 import nl.uva.qcdis.sdia.model.Exceptions.MissingVMTopologyException;
 import nl.uva.qcdis.sdia.model.Exceptions.TypeExeption;
-import nl.uva.qcdis.sdia.service.DRIPService;
+import nl.uva.qcdis.sdia.service.SDIAService;
 import nl.uva.qcdis.sdia.sure.tosca.client.ApiException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -33,7 +33,7 @@ public class ProvisionerApiController implements ProvisionerApi {
     private final HttpServletRequest request;
 
     @Autowired
-    private DRIPService dripService;
+    private SDIAService dripService;
 
     @org.springframework.beans.factory.annotation.Autowired
     public ProvisionerApiController(ObjectMapper objectMapper, HttpServletRequest request) {

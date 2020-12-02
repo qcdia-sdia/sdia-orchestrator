@@ -36,7 +36,6 @@ public class CredentialService {
     private CredentialDAO dao;
 
     public String save(Credential document) throws UnsupportedEncodingException, NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException {
-
         dao.save(Converter.encryptCredential(document,credentialSecret));
         return document.getId();
     }

@@ -18,6 +18,7 @@ import java.util.List;
 import javax.crypto.BadPaddingException;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
+import nl.uva.qcdis.sdia.model.tosca.Credential;
 import nl.uva.qcdis.sdia.service.CredentialService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;

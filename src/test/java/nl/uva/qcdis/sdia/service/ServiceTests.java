@@ -83,7 +83,7 @@ public class ServiceTests {
     ToscaTemplateService toscaTemplateService;
 
     @Autowired
-    DRIPService dripService;
+    SDIAService dripService;
 
     @Value("${message.broker.queue.provisioner}")
     private String provisionerQueueName;
