@@ -3,6 +3,7 @@ services:
 
   rabbit:
     image: rabbitmq:3.8-management
+    restart: unless-stopped
     ports:
       - "5671-5672:5671-5672"
       - "15672:15672"
@@ -40,11 +41,13 @@ services:
 
   mongo:
     image: mongo:4
+    restart: unless-stopped
     ports:
       - "27017:27017"
 
   mongo-express:
     image: mongo-express
+    restart: unless-stopped
     environment:
         - ME_CONFIG_MONGODB_SERVER=mongo
         - ME_CONFIG_MONGODB_PORT=27017
@@ -57,10 +60,11 @@ services:
     ports:
         - "8082:8082"
 
-#  sure-tosca:
-#    image: qcdis/sure-tosca
-#    ports:
-#      - "8081:8081"
+  sure-tosca:
+    image: qcdis/sure-tosca
+    restart: unless-stopped
+    ports:
+      - "8081:8081"
 
   #provisioner:
     #depends_on:
@@ -83,11 +87,12 @@ services:
       #SURE_TOSCA_BASE_PATH: http://sure-tosca:8081/tosca-sure/1.0.0
       #SEMAPHORE_BASE_PATH: http://semaphore:3000/api
 
-#  planner:
-#    depends_on:
-#      - rabbit
-#      - sure-tosca
-#    image: qcdis/sdia-infrastructure-planner
-#    environment:
-#      RABBITMQ_HOST: rabbit
+  planner:
+    depends_on:
+      - rabbit
+      - sure-tosca
+    image: qcdis/sdia-infrastructure-planner
+    restart: unless-stopped
+    environment:
+      RABBITMQ_HOST: rabbit
 
