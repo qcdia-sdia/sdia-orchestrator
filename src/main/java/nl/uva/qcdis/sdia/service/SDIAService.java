@@ -54,7 +54,7 @@ public class SDIAService {
     @Value("${message.broker.queue.deployer}")
     private String deployerQueueName;
     public static final String[] OS_PROVIDERS = new String[]{"INFN", 
-        "CESGA"};
+        "CESGA","EGI"};
 
     private String execute(ToscaTemplate toscaTemplate, String requestQeueName) throws IOException, TimeoutException, InterruptedException{
         try {
