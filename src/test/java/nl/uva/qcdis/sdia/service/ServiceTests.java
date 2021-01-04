@@ -546,8 +546,8 @@ public class ServiceTests {
             for (NodeTemplateMap vmTopology : vmTopologies) {
                 Map<String, Object> attributes = vmTopology.getNodeTemplate().getAttributes();
                 assertNotNull(attributes);
-                Assert.assertTrue(attributes.containsKey("credential"));
-                assertNotNull(attributes.get("credential"));
+                Assert.assertTrue(attributes.containsKey("credentials"));
+                assertNotNull(attributes.get("credentials"));
                 toscaTemplate = dripService.setDesieredSate(toscaTemplate, vmTopology, Constants.NODE_STATES.RUNNING);
             }
 
@@ -558,8 +558,8 @@ public class ServiceTests {
                 if (node.getType().equals(VM_TOPOLOGY)) {
                     Map<String, Object> attributes = node.getAttributes();
                     assertNotNull(attributes);
-                    Assert.assertTrue(attributes.containsKey("credential"));
-                    assertNotNull(attributes.get("credential"));
+                    Assert.assertTrue(attributes.containsKey("credentials"));
+                    assertNotNull(attributes.get("credentials"));
                     Assert.assertTrue(attributes.containsKey("desired_state"));
                     assertNotNull(attributes.get("desired_state"));
                 }
