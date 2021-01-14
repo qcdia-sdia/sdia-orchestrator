@@ -10,6 +10,7 @@ import java.util.logging.Logger;
 import nl.uva.qcdis.sdia.api.NotFoundException;
 import nl.uva.qcdis.sdia.commons.utils.ToscaHelper;
 import nl.uva.qcdis.sdia.commons.utils.Constants.NODE_STATES;
+import nl.uva.qcdis.sdia.commons.utils.Converter;
 import nl.uva.qcdis.sdia.model.Exceptions.MissingCredentialsException;
 import nl.uva.qcdis.sdia.model.Exceptions.MissingVMTopologyException;
 import nl.uva.qcdis.sdia.model.Exceptions.TypeExeption;
@@ -85,7 +86,7 @@ public class SDIAService {
         return credentials.get(0);
     }
 
-    protected ToscaTemplate addCredentials(ToscaTemplate toscaTemplate) throws MissingCredentialsException, ApiException, TypeExeption, MissingVMTopologyException {
+    protected ToscaTemplate addCredentials(ToscaTemplate toscaTemplate) throws MissingCredentialsException, ApiException, TypeExeption, MissingVMTopologyException, JsonProcessingException {
         List<NodeTemplateMap> vmTopologies = helper.getVMTopologyTemplates();
         if (vmTopologies == null) {
             throw new MissingVMTopologyException("ToscaTemplate: " + toscaTemplate + " has no VM topology");
@@ -105,7 +106,9 @@ public class SDIAService {
             }
 
         }
-        Logger.getLogger(ToscaHelper.class.getName()).log(Level.FINE, "Added credetials to ToscaTemplate");
+        Logger.getLogger(SDIAService.class.getName()).log(Level.INFO, "Added credetials to ToscaTemplate");
+        Logger.getLogger(SDIAService.class.getName()).log(Level.INFO, Converter.toYAML(toscaTemplate));
+        
         return toscaTemplate;
     }
 
