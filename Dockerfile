@@ -1,5 +1,5 @@
 FROM openjdk:11
-COPY target/orchestrator-1.0.0.jar orchestrator.jar
+COPY ./target/orchestrator-1.0.0.jar orchestrator.jar
 
 CMD jar -xf orchestrator.jar BOOT-INF/classes/application.properties && \
     sed -ie "s#^message.broker.host=.*#message.broker.host=$RABBITMQ_HOST#" BOOT-INF/classes/application.properties && \ 
