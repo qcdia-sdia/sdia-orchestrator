@@ -4,7 +4,7 @@
     <artifactId>orchestrator</artifactId>
     <packaging>jar</packaging>
     <name>orchestrator</name>
-    <version>1.0.1</version>
+    <version>release-1.0.1</version>
     <properties>
         <java.version>1.8</java.version>
         <maven.compiler.source>11</maven.compiler.source>
@@ -37,7 +37,7 @@
                 <version>1.4.13</version>
                 <configuration>
                     <!--<repository>${docker.image.prefix}/${project.artifactId}</repository>-->
-                    <repository>${project.artifactId}</repository>
+                    <repository>qcdis/sdia-${project.artifactId}</repository>
                     <tag>${project.version}</tag>
                 </configuration>
             </plugin>
