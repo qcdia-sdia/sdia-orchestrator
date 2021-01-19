@@ -10,8 +10,6 @@ import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 import javax.crypto.BadPaddingException;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
@@ -35,8 +33,9 @@ public class CredentialService {
     @Autowired
     private CredentialDAO dao;
 
-    public String save(Credential document) throws UnsupportedEncodingException, NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException {
-
+    public String save(Credential document) throws UnsupportedEncodingException, 
+            NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException, 
+            IllegalBlockSizeException, BadPaddingException {
         dao.save(Converter.encryptCredential(document,credentialSecret));
         return document.getId();
     }

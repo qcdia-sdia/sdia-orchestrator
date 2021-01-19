@@ -41,7 +41,7 @@ import org.springframework.stereotype.Service;
  * @author S. Koulouzis
  */
 @Service
-public class DRIPCaller implements AutoCloseable {
+public class SDIACaller implements AutoCloseable {
 
 //    private Connection connection;
 //    private Channel channel;
@@ -50,9 +50,9 @@ public class DRIPCaller implements AutoCloseable {
     private final ObjectMapper mapper;
     private final ConnectionFactory factory;
 
-    public DRIPCaller(ConnectionFactory factory) throws IOException, TimeoutException {
+    public SDIACaller(ConnectionFactory factory) throws IOException, TimeoutException {
         this.factory = factory;
-        Logger.getLogger(DRIPCaller.class.getName()).log(Level.INFO, "ConnectionFactory host: {0}", factory.getHost());
+        Logger.getLogger(SDIACaller.class.getName()).log(Level.INFO, "ConnectionFactory host: {0}", factory.getHost());
         //        factory.setHost(messageBrokerHost);
 //        factory.setPort(AMQP.PROTOCOL.PORT);
 //        factory.setUsername(username);
@@ -120,7 +120,7 @@ public class DRIPCaller implements AutoCloseable {
                     .expiration(String.valueOf(timeOut * 60000))
                     .replyTo(replyQueueName)
                     .build();
-            Logger.getLogger(DRIPCaller.class.getName()).log(Level.INFO, "Sending: {0} to queue: {1}", new Object[]{jsonInString, getRequestQeueName()});
+            Logger.getLogger(SDIACaller.class.getName()).log(Level.INFO, "Sending: {0} to queue: {1}", new Object[]{jsonInString, getRequestQeueName()});
 
             channel.basicPublish("", getRequestQeueName(), props, jsonInString.getBytes("UTF-8"));
 
@@ -137,7 +137,7 @@ public class DRIPCaller implements AutoCloseable {
 //        String resp = response.take();
 
             String resp = response.poll(timeOut, TimeUnit.MINUTES);
-            Logger.getLogger(DRIPCaller.class.getName()).log(Level.INFO, "Got: {0}", resp);
+            Logger.getLogger(SDIACaller.class.getName()).log(Level.INFO, "Got: {0}", resp);
             if (resp == null) {
                 throw new TimeoutException("Timeout on qeue: " + getRequestQeueName());
             }

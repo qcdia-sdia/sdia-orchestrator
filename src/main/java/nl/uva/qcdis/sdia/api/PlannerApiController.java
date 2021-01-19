@@ -12,7 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import javax.servlet.http.HttpServletRequest;
-import nl.uva.qcdis.sdia.service.DRIPService;
+import nl.uva.qcdis.sdia.service.SDIAService;
 import nl.uva.qcdis.sdia.sure.tosca.client.ApiException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -28,7 +28,7 @@ public class PlannerApiController implements PlannerApi {
     private final HttpServletRequest request;
 
     @Autowired
-    private DRIPService dripService;
+    private SDIAService dripService;
 
     @org.springframework.beans.factory.annotation.Autowired
     public PlannerApiController(ObjectMapper objectMapper, HttpServletRequest request) {

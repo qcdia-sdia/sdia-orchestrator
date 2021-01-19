@@ -9,7 +9,7 @@ import org.springframework.stereotype.Controller;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
-import nl.uva.qcdis.sdia.service.DRIPService;
+import nl.uva.qcdis.sdia.service.SDIAService;
 import nl.uva.qcdis.sdia.service.ToscaTemplateService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -32,7 +32,7 @@ public class ScalerApiController implements ScalerApi {
     private ToscaTemplateService toscaTemplateService;
 
     @Autowired
-    private DRIPService dripService;
+    private SDIAService dripService;
 
     @Value("${message.broker.queue.provisioner}")
     private String provisionerQueueName;

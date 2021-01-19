@@ -39,7 +39,8 @@ public interface CredentialApi {
             produces = {"application/json"},
             consumes = {"application/json"},
             method = RequestMethod.POST)
-    ResponseEntity<String> createCredentials(@ApiParam(value = "Created user object", required = true) @Valid @RequestBody Credential body);
+    ResponseEntity<String> createCredentials(@ApiParam(value = "Created user object", required = true) 
+    @Valid @RequestBody Credential body);
 
     @ApiOperation(value = "Get all credential IDs", nickname = "getCredentialIDs", notes = "Returns all IDss ", response = String.class, responseContainer = "List", authorizations = {
         @Authorization(value = "auth", scopes = {

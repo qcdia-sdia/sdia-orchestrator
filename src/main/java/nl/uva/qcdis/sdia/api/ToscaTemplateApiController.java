@@ -22,7 +22,7 @@ import java.util.concurrent.TimeoutException;
 import java.util.logging.Level;
 import nl.uva.qcdis.sdia.model.Exceptions.TypeExeption;
 import nl.uva.qcdis.sdia.model.tosca.ToscaTemplate;
-import nl.uva.qcdis.sdia.service.DRIPService;
+import nl.uva.qcdis.sdia.service.SDIAService;
 import nl.uva.qcdis.sdia.service.ToscaTemplateService;
 import nl.uva.qcdis.sdia.sure.tosca.client.ApiException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,7 +43,7 @@ public class ToscaTemplateApiController implements ToscaTemplateApi {
     private ToscaTemplateService toscaTemplateService;
 
     @Autowired
-    private DRIPService dripService;
+    private SDIAService dripService;
 
     @org.springframework.beans.factory.annotation.Autowired
     public ToscaTemplateApiController(ObjectMapper objectMapper, HttpServletRequest request) {
