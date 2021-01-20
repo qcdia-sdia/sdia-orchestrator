@@ -87,12 +87,12 @@ services:
       #SURE_TOSCA_BASE_PATH: http://sure-tosca:8081/tosca-sure/1.0.0
       #SEMAPHORE_BASE_PATH: http://semaphore:3000/api
 
-  planner:
-    depends_on:
-      - rabbit
-      - sure-tosca
-    image: qcdis/sdia-infrastructure-planner
-    restart: unless-stopped
-    environment:
-      RABBITMQ_HOST: rabbit
+#  planner:
+#    depends_on:
+#      - rabbit
+#      - sure-tosca
+#    image: qcdis/sdia-infrastructure-planner
+#    restart: unless-stopped
+#    environment:
+#      RABBITMQ_HOST: rabbit
 
