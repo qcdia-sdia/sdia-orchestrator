@@ -6,6 +6,7 @@
 package nl.uva.qcdis.sdia.service;
 
 import java.io.UnsupportedEncodingException;
+import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
@@ -35,7 +36,7 @@ public class CredentialService {
 
     public String save(Credential document) throws UnsupportedEncodingException, 
             NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException, 
-            IllegalBlockSizeException, BadPaddingException {
+            IllegalBlockSizeException, BadPaddingException, InvalidAlgorithmParameterException {
         dao.save(Converter.encryptCredential(document,credentialSecret));
         return document.getId();
     }

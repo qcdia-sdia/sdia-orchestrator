@@ -4,6 +4,7 @@ import nl.uva.qcdis.sdia.model.tosca.Credential;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.annotations.*;
 import java.io.UnsupportedEncodingException;
+import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import org.slf4j.Logger;
@@ -50,12 +51,15 @@ public class CredentialApiController implements CredentialApi {
             @Valid @RequestBody Credential body) {
 //        String accept = request.getHeader("Accept");
 //        if (accept != null && accept.contains("application/json")) {
-            try {
-                String id = credentialService.save(body);
-                return new ResponseEntity<>(id, HttpStatus.OK);
-            } catch (UnsupportedEncodingException | NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException | IllegalBlockSizeException | BadPaddingException ex) {
-                return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-            }
+        try {
+            String id = credentialService.save(body);
+            return new ResponseEntity<>(id, HttpStatus.OK);
+        } catch (UnsupportedEncodingException | NoSuchAlgorithmException
+                | NoSuchPaddingException | InvalidKeyException
+                | IllegalBlockSizeException | BadPaddingException
+                | InvalidAlgorithmParameterException ex) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
 //        } else {
 //            return new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
 //        }
@@ -66,8 +70,8 @@ public class CredentialApiController implements CredentialApi {
     public ResponseEntity<List<String>> getCredentialIDs() {
 //        String accept = request.getHeader("Accept");
 //        if (accept != null && accept.contains("application/json")) {
-            List<String> ids = credentialService.getAllIds();
-            return new ResponseEntity<>(ids, HttpStatus.OK);
+        List<String> ids = credentialService.getAllIds();
+        return new ResponseEntity<>(ids, HttpStatus.OK);
 //        }
 //        return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
     }
