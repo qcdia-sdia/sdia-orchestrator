@@ -208,7 +208,7 @@ public class SDIAService {
         for (NodeTemplateMap vmTopologyMap : vmTopologies) {
             String provider = helper.getTopologyProvider(vmTopologyMap);
             for(String osProvider: ANSIBLE_WF_PROVIDERS){
-                if(osProvider.toUpperCase().equals(provider)){
+                if(osProvider.toUpperCase().equals(provider.toUpperCase())){
                     return deployerQueueName;
                 }
             }
