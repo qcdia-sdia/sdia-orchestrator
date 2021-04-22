@@ -4,6 +4,7 @@ package nl.uva.qcdis.sdia.service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.TimeoutException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -54,8 +55,9 @@ public class SDIAService {
 
     @Value("${message.broker.queue.deployer}")
     private String deployerQueueName;
-    public static final String[] OS_PROVIDERS = new String[]{"INFN", 
-        "CESGA","EGI"};
+    
+    public static final String[] ANSIBLE_WF_PROVIDERS = new String[]{"INFN", 
+        "CESGA","EGI","Azure"};
 
     private String execute(ToscaTemplate toscaTemplate, String requestQeueName) throws IOException, TimeoutException, InterruptedException{
         try {
@@ -205,8 +207,8 @@ public class SDIAService {
         }
         for (NodeTemplateMap vmTopologyMap : vmTopologies) {
             String provider = helper.getTopologyProvider(vmTopologyMap);
-            for(String osProvider: OS_PROVIDERS){
-                if(osProvider.toUpperCase().equals(provider)){
+            for(String osProvider: ANSIBLE_WF_PROVIDERS){
+                if(osProvider.toUpperCase().equals(provider.toUpperCase())){
                     return deployerQueueName;
                 }
             }
