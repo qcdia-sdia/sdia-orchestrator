@@ -140,6 +140,7 @@ public class SDIAService {
         NODE_STATES currentState = helper.getNodeCurrentState(node);
         NODE_STATES desiredState = helper.getNodeDesiredState(node);
         node = helper.setNodeDesiredState(node, nodeState);
+        node = helper.setNodeCurrentState(node, null);
         toscaTemplate = helper.setNodeInToscaTemplate(toscaTemplate, node);
         return toscaTemplate;
     }
