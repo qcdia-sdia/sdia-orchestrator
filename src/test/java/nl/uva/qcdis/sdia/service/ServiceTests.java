@@ -568,8 +568,8 @@ public class ServiceTests {
                     assertNotNull(attributes.get("credentials"));
                     Assert.assertTrue(attributes.containsKey("desired_state"));
                     assertNotNull(attributes.get("desired_state"));
-                    Assert.assertEquals(attributes.get("desired_state"),Constants.NODE_STATES.RUNNING);
-                    Assert.assertEquals(attributes.get("current_state"),Constants.NODE_STATES.RUNNING);
+                    Assert.assertEquals(attributes.get("desired_state"),Constants.NODE_STATES.RUNNING.toString());
+                    Assert.assertEquals(attributes.get("current_state"),Constants.NODE_STATES.UNDEFINED.toString());
                 }
             }
 
