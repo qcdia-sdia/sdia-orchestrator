@@ -1,6 +1,6 @@
 FROM openjdk:11
 COPY ./target/orchestrator-release*.jar ./
-RUN mv orchestrator-release-*.jar  orchestrator.jar
+RUN mv orchestrator-*.jar  orchestrator.jar
 CMD jar -xf orchestrator.jar BOOT-INF/classes/application.properties && \
     sed -ie "s#^message.broker.host=.*#message.broker.host=$RABBITMQ_HOST#" BOOT-INF/classes/application.properties && \ 
     sed -ie "s#^db.host=.*#db.host=$MONGO_HOST#" BOOT-INF/classes/application.properties && \ 
