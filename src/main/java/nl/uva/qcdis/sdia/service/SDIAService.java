@@ -177,7 +177,7 @@ public class SDIAService {
         return toscaTemplate;
     }
 
-    public String delete(String id, List<String> nodeNames) throws NotFoundException, IOException, JsonProcessingException, ApiException, TypeExeption, TimeoutException, InterruptedException {
+    public String delete(String id, List<String> nodeNames) throws NotFoundException, IOException, JsonProcessingException, ApiException, TypeExeption, TimeoutException, InterruptedException, MissingVMTopologyException {
         ToscaTemplate toscaTemplate = initExecution(id);
         boolean nothingToDelete = true;
         //If no nodes are specified delete all the infrastructure
@@ -192,8 +192,9 @@ public class SDIAService {
                     }
                 }
                 if (!nothingToDelete) {
+                    String queueName = getQueueName(toscaTemplate);
                     this.toscaTemplateService.deleteByID(id);
-                    return execute(toscaTemplate, provisionerQueueName);
+                    return execute(toscaTemplate, queueName);
                 }
             }
             return id;
