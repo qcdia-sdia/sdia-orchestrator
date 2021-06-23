@@ -100,12 +100,12 @@ public class SDIACaller implements AutoCloseable {
         try {
             String jsonInString = mapper.writeValueAsString(r);
 
-            int timeOut = 55;
+            int timeOut = 150;
             if (getRequestQeueName().equals("planner")) {
-                timeOut = 15;
+                timeOut = 30;
             }
             if (getRequestQeueName().equals("provisioner")) {
-                timeOut = 20;
+                timeOut = 30;
             }
             connection = factory.newConnection();
 
