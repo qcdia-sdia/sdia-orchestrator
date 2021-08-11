@@ -212,8 +212,10 @@ public class SDIAService {
         }
         for (NodeTemplateMap vmTopologyMap : vmTopologies) {
             String provider = helper.getTopologyProvider(vmTopologyMap);
+            Map<String, Object> interfaces = vmTopologyMap.getNodeTemplate().getInterfaces();
+            Object ec2Interface = interfaces.get("EC2");
             for(String osProvider: ANSIBLE_WF_PROVIDERS){
-                if(osProvider.toUpperCase().equals(provider.toUpperCase())){
+                if(osProvider.toUpperCase().equals(provider.toUpperCase()) || ec2Interface!=null){
                     return deployerQueueName;
                 }
             }
