@@ -23,7 +23,6 @@ import java.util.logging.Level;
 import nl.uva.qcdis.sdia.model.Exceptions.MissingVMTopologyException;
 import nl.uva.qcdis.sdia.model.Exceptions.SIDIAExeption;
 import nl.uva.qcdis.sdia.model.Exceptions.TypeExeption;
-import nl.uva.qcdis.sdia.model.tosca.ToscaTemplate;
 import nl.uva.qcdis.sdia.service.SDIAService;
 import nl.uva.qcdis.sdia.service.ToscaTemplateService;
 import nl.uva.qcdis.sdia.sure.tosca.client.ApiException;
