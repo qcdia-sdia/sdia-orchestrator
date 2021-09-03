@@ -21,8 +21,8 @@ import java.util.Map;
 import java.util.concurrent.TimeoutException;
 import java.util.logging.Level;
 import nl.uva.qcdis.sdia.model.Exceptions.MissingVMTopologyException;
+import nl.uva.qcdis.sdia.model.Exceptions.SIDIAExeption;
 import nl.uva.qcdis.sdia.model.Exceptions.TypeExeption;
-import nl.uva.qcdis.sdia.model.tosca.ToscaTemplate;
 import nl.uva.qcdis.sdia.service.SDIAService;
 import nl.uva.qcdis.sdia.service.ToscaTemplateService;
 import nl.uva.qcdis.sdia.sure.tosca.client.ApiException;
@@ -68,6 +68,8 @@ public class ToscaTemplateApiController implements ToscaTemplateApi {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         } catch (MissingVMTopologyException ex) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        } catch (SIDIAExeption ex) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ex.getMessage());
         }
 //        } else {
 //            return new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
@@ -88,6 +90,8 @@ public class ToscaTemplateApiController implements ToscaTemplateApi {
         } catch (NotFoundException ex) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         } catch (MissingVMTopologyException ex) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        } catch (SIDIAExeption ex) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }

@@ -14,6 +14,7 @@ import nl.uva.qcdis.sdia.commons.utils.Constants.NODE_STATES;
 import nl.uva.qcdis.sdia.commons.utils.Converter;
 import nl.uva.qcdis.sdia.model.Exceptions.MissingCredentialsException;
 import nl.uva.qcdis.sdia.model.Exceptions.MissingVMTopologyException;
+import nl.uva.qcdis.sdia.model.Exceptions.SIDIAExeption;
 import nl.uva.qcdis.sdia.model.Exceptions.TypeExeption;
 import nl.uva.qcdis.sdia.model.Message;
 import nl.uva.qcdis.sdia.model.NodeTemplateMap;
@@ -59,7 +60,7 @@ public class SDIAService {
     public static final String[] ANSIBLE_WF_PROVIDERS = new String[]{"INFN", 
         "CESGA","EGI","Azure"};
 
-    private String execute(ToscaTemplate toscaTemplate, String requestQeueName) throws IOException, TimeoutException, InterruptedException{
+    private String execute(ToscaTemplate toscaTemplate, String requestQeueName) throws IOException, TimeoutException, InterruptedException, SIDIAExeption{
         try {
             caller.init();
 //            Logger.getLogger(SDIAService.class.getName()).log(Level.INFO, "toscaTemplate:\n{0}", toscaTemplate);
@@ -114,12 +115,12 @@ public class SDIAService {
         return toscaTemplate;
     }
 
-    public String plan(String id) throws ApiException, NotFoundException, IOException, JsonProcessingException, TimeoutException, InterruptedException {
+    public String plan(String id) throws ApiException, NotFoundException, IOException, JsonProcessingException, TimeoutException, InterruptedException, SIDIAExeption {
         ToscaTemplate toscaTemplate = initExecution(id);
         return execute(toscaTemplate, plannerQueueName);
     }
 
-    public String provision(String id) throws MissingCredentialsException, ApiException, TypeExeption, IOException, JsonProcessingException, TimeoutException, InterruptedException, NotFoundException, MissingVMTopologyException {
+    public String provision(String id) throws MissingCredentialsException, ApiException, TypeExeption, IOException, JsonProcessingException, TimeoutException, InterruptedException, NotFoundException, MissingVMTopologyException, SIDIAExeption {
         ToscaTemplate toscaTemplate = initExecution(id);
         toscaTemplate = addCredentials(toscaTemplate);
         //Update ToscaTemplate so we can include the credentials
@@ -157,7 +158,7 @@ public class SDIAService {
         }
     }
 
-    public String deploy(String id, List<String> nodeNames) throws JsonProcessingException, NotFoundException, IOException, ApiException, Exception {
+    public String deploy(String id, List<String> nodeNames) throws JsonProcessingException, NotFoundException, IOException, ApiException, TimeoutException, InterruptedException, SIDIAExeption {
         ToscaTemplate toscaTemplate = initExecution(id);
         //If no nodes are specified deploy all applications
         if (nodeNames == null || nodeNames.isEmpty()) {
@@ -177,7 +178,7 @@ public class SDIAService {
         return toscaTemplate;
     }
 
-    public String delete(String id, List<String> nodeNames) throws NotFoundException, IOException, JsonProcessingException, ApiException, TypeExeption, TimeoutException, InterruptedException, MissingVMTopologyException {
+    public String delete(String id, List<String> nodeNames) throws NotFoundException, IOException, JsonProcessingException, ApiException, TypeExeption, TimeoutException, InterruptedException, MissingVMTopologyException, SIDIAExeption {
         ToscaTemplate toscaTemplate = initExecution(id);
         boolean nothingToDelete = true;
         //If no nodes are specified delete all the infrastructure

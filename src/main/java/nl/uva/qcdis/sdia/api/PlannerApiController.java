@@ -1,5 +1,6 @@
 package nl.uva.qcdis.sdia.api;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.annotations.*;
 import java.io.IOException;
@@ -12,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import javax.servlet.http.HttpServletRequest;
+import nl.uva.qcdis.sdia.model.Exceptions.SIDIAExeption;
 import nl.uva.qcdis.sdia.service.SDIAService;
 import nl.uva.qcdis.sdia.sure.tosca.client.ApiException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,6 +57,8 @@ public class PlannerApiController implements PlannerApi {
         } catch (ApiException | IOException | InterruptedException ex) {
             java.util.logging.Logger.getLogger(PlannerApiController.class.getName()).log(Level.SEVERE, null, ex);
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        } catch (SIDIAExeption ex) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ex.getMessage());
         }
 
 //        } else {
