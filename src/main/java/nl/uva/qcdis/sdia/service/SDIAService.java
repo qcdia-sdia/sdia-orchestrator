@@ -157,7 +157,7 @@ public class SDIAService {
         }
     }
 
-    public String deploy(String id, List<String> nodeNames) throws JsonProcessingException, NotFoundException, IOException, ApiException, Exception {
+    public String deploy(String id, List<String> nodeNames) throws JsonProcessingException, NotFoundException, IOException, ApiException, TimeoutException, InterruptedException {
         ToscaTemplate toscaTemplate = initExecution(id);
         //If no nodes are specified deploy all applications
         if (nodeNames == null || nodeNames.isEmpty()) {
