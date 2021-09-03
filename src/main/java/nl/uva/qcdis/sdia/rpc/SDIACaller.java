@@ -18,6 +18,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import nl.uva.qcdis.sdia.model.Exceptions.SIDIAExeption;
 import nl.uva.qcdis.sdia.model.Message;
 import org.springframework.stereotype.Service;
 
@@ -94,7 +95,7 @@ public class SDIACaller implements AutoCloseable {
 //        }
     }
 
-    public Message call(Message r) throws IOException, TimeoutException, InterruptedException {
+    public Message call(Message r) throws IOException, TimeoutException, InterruptedException, SIDIAExeption {
         Channel channel = null;
         Connection connection = null;
         try {
@@ -141,7 +142,14 @@ public class SDIACaller implements AutoCloseable {
             if (resp == null) {
                 throw new TimeoutException("Timeout on qeue: " + getRequestQeueName());
             }
-            return mapper.readValue(resp, Message.class);
+            try {
+                return mapper.readValue(resp, Message.class);
+            } catch (com.fasterxml.jackson.core.JsonParseException ex) {
+                if (resp.contains("error")) {
+                    Map<String, Object> error = new ObjectMapper().readValue(resp, HashMap.class);
+                    throw new SIDIAExeption((String) error.get("error"));
+                }
+            }
         } finally {
             if (channel != null && channel.isOpen()) {
                 channel.close();
@@ -150,6 +158,7 @@ public class SDIACaller implements AutoCloseable {
                 connection.close();
             }
         }
+        return null;
     }
 
     /**
