@@ -181,7 +181,7 @@ public class ServiceTests {
     public void testToscaTemplateServiceSaveFile() throws Exception {
         Logger.getLogger(ServiceTests.class.getName()).log(Level.INFO, "saveFile");
 
-        FileInputStream in = new FileInputStream(downloadFile("https://raw.githubusercontent.com/qcdis-sdia/sdia-tosca/master/examples/application_example_updated.yaml"));
+        FileInputStream in = new FileInputStream(downloadFile("https://raw.githubusercontent.com/qcdis-sdia/sdia-tosca/master/examples/TIC_ec2_wf_with_bank.yaml"));
         MultipartFile file = new MockMultipartFile("file", in);
         toscaTemplateID = toscaTemplateService.saveFile(file);
         Assert.assertNotNull(toscaTemplateID);
@@ -200,7 +200,7 @@ public class ServiceTests {
             if (toscaTemplateID == null) {
                 testToscaTemplateServiceSaveFile();
             }
-            in = new FileInputStream(downloadFile("https://raw.githubusercontent.com/qcdis-sdia/sdia-tosca/master/examples/application_example_updated.yaml"));
+            in = new FileInputStream(downloadFile("https://raw.githubusercontent.com/qcdis-sdia/sdia-tosca/master/examples/TIC_ec2_wf_with_bank.yaml"));
             MultipartFile file = new MockMultipartFile("file", in);
             String expResult = toscaTemplateID;
             String result = toscaTemplateService.updateToscaTemplateByID(toscaTemplateID, file);
@@ -231,7 +231,7 @@ public class ServiceTests {
      */
     @Test
     public void testToscaTemplateServiceUpdateToscaTemplateByID_Exception_MultipartFile() throws FileNotFoundException, IOException {
-        FileInputStream in = new FileInputStream(downloadFile("https://raw.githubusercontent.com/qcdis-sdia/sdia-tosca/master/examples/application_example_updated.yaml"));
+        FileInputStream in = new FileInputStream(downloadFile("https://raw.githubusercontent.com/qcdis-sdia/sdia-tosca/master/examples/TIC_ec2_wf_with_bank.yaml"));
         MultipartFile file = new MockMultipartFile("file", in);
         try {
             toscaTemplateService.updateToscaTemplateByID("0", file);
@@ -272,7 +272,7 @@ public class ServiceTests {
         if (ToscaHelper.isServiceUp(sureToscaBasePath)) {
             try {
                 Logger.getLogger(ServiceTests.class.getName()).log(Level.INFO, "testToscaTemplateServiceDeleteByID");
-                FileInputStream in = new FileInputStream(downloadFile("https://raw.githubusercontent.com/qcdis-sdia/sdia-tosca/master/examples/application_example_updated.yaml"));
+                FileInputStream in = new FileInputStream(downloadFile("https://raw.githubusercontent.com/qcdis-sdia/sdia-tosca/master/examples/TIC_ec2_wf_with_bank.yaml"));
                 MultipartFile file = new MockMultipartFile("file", in);
                 String id = toscaTemplateService.saveFile(file);
                 Assert.assertNotNull(id);
