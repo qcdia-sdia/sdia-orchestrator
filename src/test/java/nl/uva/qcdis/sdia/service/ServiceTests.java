@@ -537,7 +537,7 @@ public class ServiceTests {
             addRandomCredential("ExoGENI");
             addRandomCredential("EC2");
 
-            FileInputStream in = new FileInputStream(downloadFile("https://raw.githubusercontent.com/qcdis-sdia/sdia-tosca/master/examples/application_example_planed.yaml"));
+            FileInputStream in = new FileInputStream(downloadFile("https://raw.githubusercontent.com/qcdis-sdia/sdia-tosca/master/examples/TIC_ec2_wf_with_bank.yaml"));
 
             MultipartFile file = new MockMultipartFile("file", in);
             String id = toscaTemplateService.saveFile(file);
