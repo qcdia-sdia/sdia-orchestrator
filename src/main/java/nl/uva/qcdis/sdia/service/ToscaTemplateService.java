@@ -133,6 +133,16 @@ public class ToscaTemplateService {
         }
         return matches;
     }
+    
+    public List<String> findNodeIDs(String  query) throws JsonProcessingException {
+        List<ToscaTemplate> all = dao.findAll();
+        List<String> matches = new ArrayList<>();
+        for (ToscaTemplate toscaTemplate : all) {
+            matches.add(toscaTemplate.getId());
+        }
+        return matches;
+    }
+    
 
     private boolean matches(NodeTemplate node, Map.Entry<String, String> entry) {
         switch(entry.getKey()){

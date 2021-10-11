@@ -184,7 +184,6 @@ public class ToscaTemplateApiController implements ToscaTemplateApi {
             java.util.logging.Logger.getLogger(ToscaTemplateApiController.class.getName()).log(Level.SEVERE, null, ex);
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
-
-    }
+    }    
 
 }
