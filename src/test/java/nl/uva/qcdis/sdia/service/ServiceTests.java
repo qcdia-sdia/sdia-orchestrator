@@ -507,6 +507,9 @@ public class ServiceTests {
 
     /**
      * Test of getAllIds method, of class CredentialService.
+     * @throws java.io.UnsupportedEncodingException
+     * @throws java.security.NoSuchAlgorithmException
+     * @throws javax.crypto.NoSuchPaddingException
      */
     @Test
     public void testCredentialServiceGetAllIds() throws UnsupportedEncodingException, NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException, InvalidAlgorithmParameterException {

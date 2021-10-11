@@ -6,7 +6,6 @@
 package nl.uva.qcdis.sdia.dao;
 
 import nl.uva.qcdis.sdia.model.tosca.ToscaTemplate;
-import nl.uva.qcdis.sdia.model.User;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
 

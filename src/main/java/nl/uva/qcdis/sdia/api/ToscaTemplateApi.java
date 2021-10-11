@@ -119,7 +119,9 @@ public interface ToscaTemplateApi {
     @RequestMapping(value = "/orchestrator/tosca_template/",
             produces = {"application/json"},
             method = RequestMethod.GET)
-    ResponseEntity<List<String>> getToscaTemplateID(@RequestParam(required = false) String nodeType,@RequestParam(required = false) String currentState);    
+    ResponseEntity<List<String>> getToscaTemplateID(@RequestParam(required = false) String nodeType,
+            @RequestParam(required = false) String currentState);    
+    
 
     @ApiOperation(value = "Updates exisintg topolog template", nickname = "updateToscaTemplateByID", notes = "", response = String.class, authorizations = {
         @Authorization(value = "auth", scopes = {
