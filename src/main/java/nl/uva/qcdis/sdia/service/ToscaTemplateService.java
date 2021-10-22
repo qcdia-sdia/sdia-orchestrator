@@ -24,7 +24,6 @@ import nl.uva.qcdis.sdia.model.NodeTemplate;
 import nl.uva.qcdis.sdia.model.tosca.ToscaTemplate;
 import nl.uva.qcdis.sdia.sure.tosca.client.ApiException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
