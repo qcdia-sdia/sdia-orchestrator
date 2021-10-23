@@ -1,34 +1,35 @@
 package nl.uva.qcdis.sdia.api;
 
+import io.swagger.annotations.*;
+import org.springframework.web.bind.annotation.RequestPart;
+import org.springframework.web.multipart.MultipartFile;
+
+import javax.validation.Valid;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import nl.uva.qcdis.sdia.service.ToscaTemplateService;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.RequestParam;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.swagger.annotations.*;
+import java.io.IOException;
+import java.util.concurrent.TimeoutException;
+import java.util.logging.Level;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestPart;
-import org.springframework.web.multipart.MultipartFile;
-
-import javax.validation.Valid;
 import javax.servlet.http.HttpServletRequest;
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.TimeoutException;
-import java.util.logging.Level;
 import nl.uva.qcdis.sdia.model.Exceptions.MissingVMTopologyException;
 import nl.uva.qcdis.sdia.model.Exceptions.SIDIAExeption;
 import nl.uva.qcdis.sdia.model.Exceptions.TypeExeption;
 import nl.uva.qcdis.sdia.service.SDIAService;
-import nl.uva.qcdis.sdia.service.ToscaTemplateService;
 import nl.uva.qcdis.sdia.sure.tosca.client.ApiException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.RequestParam;
 
 @javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2019-10-10T17:15:46.465Z")
 
@@ -145,6 +146,10 @@ public class ToscaTemplateApiController implements ToscaTemplateApi {
         try {
             String id = toscaTemplateService.saveFile(file);
             return new ResponseEntity<>(id, HttpStatus.OK);
+        } catch (com.fasterxml.jackson.databind.exc.UnrecognizedPropertyException ex) {
+            java.util.logging.Logger.getLogger(ToscaTemplateApiController.class.getName()).log(Level.SEVERE, null, ex);
+            log.error("Couldn't serialize response for content type application/json", ex);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ex.getMessage());
         } catch (IOException e) {
             java.util.logging.Logger.getLogger(ToscaTemplateApiController.class.getName()).log(Level.SEVERE, null, e);
             log.error("Couldn't serialize response for content type application/json", e);
@@ -169,8 +174,7 @@ public class ToscaTemplateApiController implements ToscaTemplateApi {
     }
 
     @Override
-    public ResponseEntity<List<String>> getToscaTemplateID(@RequestParam(required = false) 
-            String nodeType, @RequestParam(required = false) String currentState) {
+    public ResponseEntity<List<String>> getToscaTemplateID(@RequestParam(required = false) String nodeType, @RequestParam(required = false) String currentState) {
         try {
             Map<String, String> filters = new HashMap<>();
             if (nodeType != null) {
@@ -184,6 +188,6 @@ public class ToscaTemplateApiController implements ToscaTemplateApi {
             java.util.logging.Logger.getLogger(ToscaTemplateApiController.class.getName()).log(Level.SEVERE, null, ex);
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
-    }    
+    }
 
 }

@@ -143,7 +143,11 @@ public class SDIACaller implements AutoCloseable {
                 throw new TimeoutException("Timeout on qeue: " + getRequestQeueName());
             }
             try {
-                return mapper.readValue(resp, Message.class);
+                Message incomingMessage = mapper.readValue(resp, Message.class);
+                if (incomingMessage.getErrorReport() != null){
+                    throw new SIDIAExeption(incomingMessage.getErrorReport());
+                }
+                return incomingMessage;
             } catch (com.fasterxml.jackson.core.JsonParseException ex) {
                 if (resp.contains("error")) {
                     Map<String, Object> error = new ObjectMapper().readValue(resp, HashMap.class);
