@@ -1,4 +1,4 @@
-name: Docker
+name: Docker-gitlab
 
 on:
   push:
