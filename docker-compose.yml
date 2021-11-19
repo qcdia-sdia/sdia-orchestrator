@@ -17,7 +17,6 @@ services:
     ports:
       - "27017:27017"
 
-
   sure-tosca:
     restart: unless-stopped
     image:  qcdis/sure-tosca:1.0.2

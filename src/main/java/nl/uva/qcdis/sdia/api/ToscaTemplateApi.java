@@ -120,7 +120,8 @@ public interface ToscaTemplateApi {
             produces = {"application/json"},
             method = RequestMethod.GET)
     ResponseEntity<List<String>> getToscaTemplateID(@RequestParam(required = false) String nodeType,
-            @RequestParam(required = false) String currentState);    
+            @RequestParam(required = false) String currentState,
+            @RequestParam(required = false) String name);    
     
 
     @ApiOperation(value = "Updates exisintg topolog template", nickname = "updateToscaTemplateByID", notes = "", response = String.class, authorizations = {
