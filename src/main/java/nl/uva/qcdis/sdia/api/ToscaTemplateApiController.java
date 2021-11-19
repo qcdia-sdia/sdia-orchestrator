@@ -174,7 +174,9 @@ public class ToscaTemplateApiController implements ToscaTemplateApi {
     }
 
     @Override
-    public ResponseEntity<List<String>> getToscaTemplateID(@RequestParam(required = false) String nodeType, @RequestParam(required = false) String currentState) {
+    public ResponseEntity<List<String>> getToscaTemplateID(@RequestParam(required = false) String nodeType,
+            @RequestParam(required = false) String currentState,
+            @RequestParam(required = false) String name) {
         try {
             Map<String, String> filters = new HashMap<>();
             if (nodeType != null) {
@@ -182,6 +184,9 @@ public class ToscaTemplateApiController implements ToscaTemplateApi {
             }
             if (currentState != null) {
                 filters.put("currentState", currentState);
+            }
+            if (name != null) {
+                filters.put("name", name);
             }
             return new ResponseEntity<>(toscaTemplateService.findNodeIDs(filters), HttpStatus.OK);
         } catch (JsonProcessingException ex) {

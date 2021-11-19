@@ -45,20 +45,20 @@ services:
     ports:
       - "27017:27017"
 
-  mongo-express:
-    image: mongo-express
-    restart: unless-stopped
-    environment:
-        - ME_CONFIG_MONGODB_SERVER=mongo
-        - ME_CONFIG_MONGODB_PORT=27017
-        - ME_CONFIG_BASICAUTH_USERNAME=user
-        - ME_CONFIG_BASICAUTH_PASSWORD=pass
-        - ME_CONFIG_SITE_BASEURL=/mongo-express
-        - VCAP_APP_PORT=8082
-    depends_on:
-        - mongo
-    ports:
-        - "8082:8082"
+  #mongo-express:
+    #image: mongo-express
+    #restart: unless-stopped
+    #environment:
+        #- ME_CONFIG_MONGODB_SERVER=mongo
+        #- ME_CONFIG_MONGODB_PORT=27017
+        #- ME_CONFIG_BASICAUTH_USERNAME=user
+        #- ME_CONFIG_BASICAUTH_PASSWORD=pass
+        #- ME_CONFIG_SITE_BASEURL=/mongo-express
+        #- VCAP_APP_PORT=8082
+    #depends_on:
+        #- mongo
+    #ports:
+        #- "8082:8082"
 
   sure-tosca:
     image: qcdis/sure-tosca

@@ -116,24 +116,28 @@ public class ToscaTemplateService {
 
     public ArrayList<String> findNodeIDs(Map<String, String> filters) throws JsonProcessingException {
         List<ToscaTemplate> all = dao.findAll();
-        HashSet<String> matches = new HashSet<>();
+        HashSet<String> matchedNodes = new HashSet<>();
         for (ToscaTemplate toscaTemplate : all) {
             Map<String, NodeTemplate> nodeTemplates = toscaTemplate.getTopologyTemplate().getNodeTemplates();
-            Set<String> keys = nodeTemplates.keySet();
-            for (String key : keys) {
-                NodeTemplate node = nodeTemplates.get(key);
+            Set<String> nodeNames = nodeTemplates.keySet();
+            for (String nodeName : nodeNames) {
+                NodeTemplate node = nodeTemplates.get(nodeName);
                 Set<Map.Entry<String, String>> set = filters.entrySet();
+                boolean allFiltersMatched = false;
+                int filtersMatcheCount = 0;
                 for (Map.Entry<String, String> entry : set) {
-                    if (matches(node, entry)) {
-                        if (!matches.contains(toscaTemplate.getId())){
-                            matches.add(toscaTemplate.getId());   
-                        }
-                        break;
+                    if (matches(node,nodeName,entry)) {
+                        filtersMatcheCount++;
+                    }
+                }
+                if (filtersMatcheCount == set.size()){
+                    if (!matchedNodes.contains(toscaTemplate.getId())){
+                        matchedNodes.add(toscaTemplate.getId());   
                     }
                 }
             }
         }
-        return new ArrayList<>(matches);
+        return new ArrayList<>(matchedNodes);
     }
     
     public List<String> findNodeIDs(String  query) throws JsonProcessingException {
@@ -146,7 +150,7 @@ public class ToscaTemplateService {
     }
     
 
-    private boolean matches(NodeTemplate node, Map.Entry<String, String> entry) {
+    private boolean matches(NodeTemplate node, String nodeName,Map.Entry<String, String> entry) {
         switch(entry.getKey()){
             case "nodeType":
              if(node.getType().equals(entry.getValue())){
@@ -158,6 +162,11 @@ public class ToscaTemplateService {
                          node.getAttributes().containsKey("current_state") &&
                          node.getAttributes().get("current_state") !=null &&
                          node.getAttributes().get("current_state").equals(entry.getValue())){
+                     return true;
+                 }
+                 return false;
+             case "name":
+                 if(nodeName.equals(entry.getValue())){
                      return true;
                  }
                  return false;
