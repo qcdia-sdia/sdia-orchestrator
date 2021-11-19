@@ -13,6 +13,7 @@ import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import com.fasterxml.jackson.dataformat.yaml.YAMLGenerator.Feature;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -113,9 +114,9 @@ public class ToscaTemplateService {
         return objectMapper.readValue(ymlStr, ToscaTemplate.class);
     }
 
-    public List<String> findNodeIDs(Map<String, String> filters) throws JsonProcessingException {
+    public ArrayList<String> findNodeIDs(Map<String, String> filters) throws JsonProcessingException {
         List<ToscaTemplate> all = dao.findAll();
-        List<String> matches = new ArrayList<>();
+        HashSet<String> matches = new HashSet<>();
         for (ToscaTemplate toscaTemplate : all) {
             Map<String, NodeTemplate> nodeTemplates = toscaTemplate.getTopologyTemplate().getNodeTemplates();
             Set<String> keys = nodeTemplates.keySet();
@@ -124,13 +125,15 @@ public class ToscaTemplateService {
                 Set<Map.Entry<String, String>> set = filters.entrySet();
                 for (Map.Entry<String, String> entry : set) {
                     if (matches(node, entry)) {
-                        matches.add(toscaTemplate.getId());
+                        if (!matches.contains(toscaTemplate.getId())){
+                            matches.add(toscaTemplate.getId());   
+                        }
                         break;
                     }
                 }
             }
         }
-        return matches;
+        return new ArrayList<>(matches);
     }
     
     public List<String> findNodeIDs(String  query) throws JsonProcessingException {
