@@ -61,6 +61,7 @@ public class ToscaTemplateApiController implements ToscaTemplateApi {
 //        if (accept != null && accept.contains("text/plain")) {
         try {
             dripService.delete(id, nodeName);
+            java.util.logging.Logger.getLogger(ToscaTemplateApiController.class.getName()).log(Level.INFO, "Returning delete id: " + id);
             return new ResponseEntity<>(id, HttpStatus.OK);
         } catch (IOException | ApiException | TypeExeption | TimeoutException | InterruptedException ex) {
             java.util.logging.Logger.getLogger(ToscaTemplateApiController.class.getName()).log(Level.SEVERE, null, ex);

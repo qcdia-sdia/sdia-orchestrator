@@ -1,6 +1,5 @@
 package nl.uva.qcdis.sdia.api;
 
-import nl.uva.qcdis.sdia.model.tosca.Credential;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.annotations.*;
 import java.io.UnsupportedEncodingException;

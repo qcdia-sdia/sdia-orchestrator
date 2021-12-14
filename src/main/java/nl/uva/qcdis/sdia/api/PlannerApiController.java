@@ -1,6 +1,5 @@
 package nl.uva.qcdis.sdia.api;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.annotations.*;
 import java.io.IOException;
@@ -47,6 +46,7 @@ public class PlannerApiController implements PlannerApi {
 
         try {
             String planedYemplateId = dripService.plan(id);
+            java.util.logging.Logger.getLogger(PlannerApiController.class.getName()).log(Level.INFO, "Returning ID: {0}", planedYemplateId);
             return new ResponseEntity<>(planedYemplateId, HttpStatus.OK);
         } catch (NotFoundException | java.util.NoSuchElementException ex) {
             java.util.logging.Logger.getLogger(ToscaTemplateApiController.class.getName()).log(Level.WARNING, null, ex);
