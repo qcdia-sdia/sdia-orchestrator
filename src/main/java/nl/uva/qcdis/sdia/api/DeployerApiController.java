@@ -49,7 +49,7 @@ public class DeployerApiController implements DeployerApi {
 //        if (accept != null && accept.contains("")) {
         try {
             String planedYemplateId = dripService.deploy(id, null);
-            java.util.logging.Logger.getLogger(DeployerApiController.class.getName()).log(Level.INFO, "Returning ID: {0}", planedYemplateId);
+            java.util.logging.Logger.getLogger(DeployerApiController.class.getName()).log(Level.INFO, "Returning ID : {0}", new Object[]{planedYemplateId});
             return new ResponseEntity<>(planedYemplateId, HttpStatus.OK);
 
 //            } catch (Exception ex) {
