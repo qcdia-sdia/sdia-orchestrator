@@ -121,7 +121,7 @@ public class SDIACaller implements AutoCloseable {
                     .expiration(String.valueOf(timeOut * 60000))
                     .replyTo(replyQueueName)
                     .build();
-            Logger.getLogger(SDIACaller.class.getName()).log(Level.INFO, "Sending: {0} to queue: {1}", new Object[]{jsonInString, getRequestQeueName()});
+            Logger.getLogger(SDIACaller.class.getName()).log(Level.INFO, "Sending: to queue: {1}", new Object[]{getRequestQeueName()});
 
             channel.basicPublish("", getRequestQeueName(), props, jsonInString.getBytes("UTF-8"));
 

@@ -111,9 +111,7 @@ public class SDIAService {
             }
 
         }
-        Logger.getLogger(SDIAService.class.getName()).log(Level.INFO, "Added credetials to ToscaTemplate");
-        Logger.getLogger(SDIAService.class.getName()).log(Level.INFO, Converter.toYAML(toscaTemplate));
-        
+        Logger.getLogger(SDIAService.class.getName()).log(Level.INFO, "Added credetials to ToscaTemplate");        
         return toscaTemplate;
     }
 
