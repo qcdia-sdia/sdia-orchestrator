@@ -138,7 +138,7 @@ public class SDIACaller implements AutoCloseable {
 //        String resp = response.take();
 
             String resp = response.poll(timeOut, TimeUnit.MINUTES);
-            Logger.getLogger(SDIACaller.class.getName()).log(Level.INFO, "Got: {0}", resp);
+            Logger.getLogger(SDIACaller.class.getName()).log(Level.INFO, "Got response from qeue: {0}", getRequestQeueName());
             if (resp == null) {
                 throw new TimeoutException("Timeout on qeue: " + getRequestQeueName());
             }
