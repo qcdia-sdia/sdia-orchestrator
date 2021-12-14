@@ -72,7 +72,9 @@ public class SDIAService {
             caller.setRequestQeueName(requestQeueName);
             Message response = caller.call(message);
             ToscaTemplate updatedToscaTemplate = response.getToscaTemplate();
-            return toscaTemplateService.save(updatedToscaTemplate);
+            String savedID = toscaTemplateService.save(updatedToscaTemplate);
+            Logger.getLogger(SDIAService.class.getName()).log(Level.INFO, "Saved ID : {0}", new Object[]{savedID});
+            return savedID;
         } catch (IOException | TimeoutException | InterruptedException ex) {
             throw ex;
         }finally{
@@ -167,7 +169,9 @@ public class SDIAService {
                 toscaTemplate = setDesieredSate(toscaTemplate, applicationTemplate, NODE_STATES.RUNNING);
             }
         }
-        return execute(toscaTemplate, deployerQueueName);
+        String savedID = execute(toscaTemplate, deployerQueueName);
+        Logger.getLogger(SDIAService.class.getName()).log(Level.INFO, "Saved ID : {0}", new Object[]{savedID});
+        return savedID;
     }
 
     protected ToscaTemplate initExecution(String id) throws JsonProcessingException, NotFoundException, IOException, ApiException {

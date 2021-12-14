@@ -174,7 +174,8 @@ public class ToscaTemplateApiController implements ToscaTemplateApi {
     }
 
     @Override
-    public ResponseEntity<List<String>> getToscaTemplateID(@RequestParam(required = false) String nodeType,
+    public ResponseEntity<List<String>> getToscaTemplateID(
+            @RequestParam(required = false) String nodeType,
             @RequestParam(required = false) String currentState,
             @RequestParam(required = false) String name) {
         try {

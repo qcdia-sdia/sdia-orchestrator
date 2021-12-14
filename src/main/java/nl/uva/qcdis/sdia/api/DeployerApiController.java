@@ -49,19 +49,18 @@ public class DeployerApiController implements DeployerApi {
 //        if (accept != null && accept.contains("")) {
         try {
             String planedYemplateId = dripService.deploy(id, null);
+            java.util.logging.Logger.getLogger(DeployerApiController.class.getName()).log(Level.INFO, "Returning ID: {0}", planedYemplateId);
             return new ResponseEntity<>(planedYemplateId, HttpStatus.OK);
 
 //            } catch (Exception ex) {
 //                java.util.logging.Logger.getLogger(DeployerApiController.class.getName()).log(Level.SEVERE, null, ex);
 //                return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-        } catch (java.util.NoSuchElementException ex) {
+        } catch (java.util.NoSuchElementException | NotFoundException ex) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         } catch (IOException ex) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         } catch (ApiException ex) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-        } catch (NotFoundException ex) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         } catch (TimeoutException ex) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         } catch (InterruptedException ex) {
