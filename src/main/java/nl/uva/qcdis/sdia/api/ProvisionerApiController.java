@@ -1,6 +1,5 @@
 package nl.uva.qcdis.sdia.api;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.annotations.*;
 import java.io.IOException;
@@ -51,6 +50,7 @@ public class ProvisionerApiController implements ProvisionerApi {
 //        if (accept != null && accept.contains("text/plain")) {
         try {
             String planedYemplateId = dripService.provision(id);
+            java.util.logging.Logger.getLogger(ProvisionerApiController.class.getName()).log(Level.INFO, "Returning ID: {0}", planedYemplateId);
             return new ResponseEntity<>(planedYemplateId, HttpStatus.OK);
         } catch (ApiException | TypeExeption | IOException | TimeoutException | InterruptedException | NotFoundException ex) {
             java.util.logging.Logger.getLogger(ProvisionerApiController.class.getName()).log(Level.SEVERE, null, ex);
