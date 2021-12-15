@@ -44,31 +44,17 @@ public class DeployerApiController implements DeployerApi {
     public ResponseEntity<String> deployProvisionToscaTemplateByID(
             @ApiParam(value = "ID of topolog template to deploy", required = true)
             @PathVariable("id") String id) {
-
-//        String accept = request.getHeader("Accept");
-//        if (accept != null && accept.contains("")) {
         try {
-            String planedYemplateId = dripService.deploy(id, null);
-            java.util.logging.Logger.getLogger(DeployerApiController.class.getName()).log(Level.INFO, "Returning ID : {0}", new Object[]{planedYemplateId});
-            return new ResponseEntity<>(planedYemplateId, HttpStatus.OK);
-
-//            } catch (Exception ex) {
-//                java.util.logging.Logger.getLogger(DeployerApiController.class.getName()).log(Level.SEVERE, null, ex);
-//                return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+            String underDeplymentID = dripService.deployAsync(id, null);
+            java.util.logging.Logger.getLogger(DeployerApiController.class.getName()).log(Level.INFO, "Returning ID : {0}", new Object[]{underDeplymentID});
+            return new ResponseEntity<>(underDeplymentID, HttpStatus.ACCEPTED);
         } catch (java.util.NoSuchElementException | NotFoundException ex) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        } catch (IOException ex) {
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-        } catch (ApiException ex) {
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-        } catch (TimeoutException ex) {
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-        } catch (InterruptedException ex) {
+        } catch (IOException | ApiException | TimeoutException | InterruptedException ex) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         } catch (SIDIAExeption ex) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ex.getMessage());
-        } 
-      
+        }
     }
 
 //        } else {

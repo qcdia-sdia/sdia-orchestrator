@@ -59,7 +59,32 @@ public class SDIAService {
     
     public static final String[] ANSIBLE_WF_PROVIDERS = new String[]{"INFN", 
         "CESGA","EGI","Azure"};
-
+    
+    private String executeAsync(ToscaTemplate toscaTemplate, String requestQeueName) throws IOException, TimeoutException, InterruptedException, SIDIAExeption{
+        try {
+            String savedID = toscaTemplateService.save(toscaTemplate);
+            caller.init();
+//            Logger.getLogger(SDIAService.class.getName()).log(Level.INFO, "toscaTemplate:\n{0}", toscaTemplate);
+            Message message = new Message();
+            message.setOwner("user");
+            message.setCreationDate(System.currentTimeMillis());
+            message.setToscaTemplate(toscaTemplate);
+            
+            caller.setRequestQeueName(requestQeueName);
+            String replyQueueName = caller.callAsync(message,savedID);
+            Logger.getLogger(SDIAService.class.getName()).log(Level.INFO, "Saved ID : {0}", new Object[]{savedID});
+            return savedID;
+        } catch (IOException | TimeoutException | InterruptedException ex) {
+            throw ex;
+        }finally{
+            try {
+                caller.close();
+            } catch (IOException | TimeoutException ex) {
+                Logger.getLogger(SDIAService.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+    }
+    
     private String execute(ToscaTemplate toscaTemplate, String requestQeueName) throws IOException, TimeoutException, InterruptedException, SIDIAExeption{
         try {
             caller.init();
@@ -84,7 +109,6 @@ public class SDIAService {
                 Logger.getLogger(SDIAService.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
-
     }
 
     private Credential getBestCredential(List<Credential> credentials) {
@@ -157,6 +181,19 @@ public class SDIAService {
                 return true;
         }
     }
+    public String deployAsync(String id, List<String> nodeNames) throws JsonProcessingException, NotFoundException, IOException, ApiException, TimeoutException, InterruptedException, SIDIAExeption {
+        ToscaTemplate toscaTemplate = initExecution(id);
+        //If no nodes are specified deploy all applications
+        if (nodeNames == null || nodeNames.isEmpty()) {
+            List<NodeTemplateMap> applicationTemplates = helper.getApplicationTemplates();
+            for (NodeTemplateMap applicationTemplate : applicationTemplates) {
+                toscaTemplate = setDesieredSate(toscaTemplate, applicationTemplate, NODE_STATES.RUNNING);
+            }
+        }
+        String savedID = executeAsync(toscaTemplate, deployerQueueName);
+        Logger.getLogger(SDIAService.class.getName()).log(Level.INFO, "Saved ID : {0}", new Object[]{savedID});
+        return savedID;
+    }
 
     public String deploy(String id, List<String> nodeNames) throws JsonProcessingException, NotFoundException, IOException, ApiException, TimeoutException, InterruptedException, SIDIAExeption {
         ToscaTemplate toscaTemplate = initExecution(id);
@@ -225,5 +262,13 @@ public class SDIAService {
             return provisionerQueueName;
     }
     return provisionerQueueName;
+    }
+
+    public void processQueue(String id) throws IOException, TimeoutException, InterruptedException, SIDIAExeption {
+        caller.init();
+        Message incoming = caller.pollQueue(id);
+        if(incoming!=null){
+            String newID = toscaTemplateService.updateToscaTemplateByID(id, incoming.getToscaTemplate());
+        }
     }
 }
