@@ -19,6 +19,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import nl.uva.qcdis.sdia.commons.utils.Constants;
 import nl.uva.qcdis.sdia.model.Exceptions.SIDIAExeption;
 import nl.uva.qcdis.sdia.model.Message;
 import org.springframework.stereotype.Service;
@@ -240,6 +241,7 @@ public class SDIACaller implements AutoCloseable {
                         throw new SIDIAExeption(incomingMessage.getErrorReport());
                     }
                     channel.queueDelete(replyQueueName);
+                    incomingMessage.setStatus(Constants.NODE_STATES.CREATED);
                     return incomingMessage;
                 } catch (com.fasterxml.jackson.core.JsonParseException ex) {
                     if (body.contains("error")) {
@@ -247,6 +249,10 @@ public class SDIACaller implements AutoCloseable {
                         throw new SIDIAExeption((String) error.get("error"));
                     }
                 }
+            }else{
+                Message processing = new Message();
+                processing.setStatus(Constants.NODE_STATES.CREATING);
+                return processing;
             }
         } catch (IOException ex) {
             Logger.getLogger(SDIACaller.class.getName()).log(Level.INFO, "Did not find queue: {0}", replyQueueName);

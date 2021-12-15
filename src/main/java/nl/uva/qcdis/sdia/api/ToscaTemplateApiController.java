@@ -24,6 +24,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import javax.servlet.http.HttpServletRequest;
+import nl.uva.qcdis.sdia.commons.utils.Constants;
 import nl.uva.qcdis.sdia.model.Exceptions.MissingVMTopologyException;
 import nl.uva.qcdis.sdia.model.Exceptions.SIDIAExeption;
 import nl.uva.qcdis.sdia.model.Exceptions.TypeExeption;
@@ -103,9 +104,15 @@ public class ToscaTemplateApiController implements ToscaTemplateApi {
             @PathVariable("id") String id) {
         try {
             java.util.logging.Logger.getLogger(ToscaTemplateApiController.class.getName()).log(Level.INFO, "Requestsed ID: {0}", id);
-            sdiaService.processQueue(id);
+            Constants.NODE_STATES staus = sdiaService.processQueue(id);
             String ymlStr = toscaTemplateService.findByID(id);
-            return new ResponseEntity<>(ymlStr, HttpStatus.OK);
+            switch (staus) {
+                case CREATING:
+                    return new ResponseEntity<>(ymlStr, HttpStatus.PROCESSING);
+                default:
+                    return new ResponseEntity<>(ymlStr, HttpStatus.OK);
+            }
+
         } catch (NotFoundException | java.util.NoSuchElementException ex) {
             java.util.logging.Logger.getLogger(ToscaTemplateApiController.class.getName()).log(Level.WARNING, null, ex);
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
