@@ -73,6 +73,17 @@ public class ToscaTemplateService {
         tt.setId(id);
         return save(tt);
     }
+    
+    public String updateToscaTemplateByID(String id, ToscaTemplate toscaTemplate) throws IOException {
+        ToscaTemplate tt = dao.findById(id).get();
+        if (tt == null) {
+            throw new IOException("Tosca Template with id :" + id + " not found");
+        }
+        tt = toscaTemplate;
+        tt.setId(id);
+        return save(toscaTemplate);
+    }
+    
 
     public ToscaTemplate findToscaTemplateByID(String id) throws JsonProcessingException, NotFoundException {
         ToscaTemplate tt = dao.findById(id).get();

@@ -8,6 +8,7 @@ import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.ConnectionFactory;
 import com.rabbitmq.client.DefaultConsumer;
 import com.rabbitmq.client.Envelope;
+import com.rabbitmq.client.GetResponse;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
@@ -69,24 +70,6 @@ public class SDIACaller implements AutoCloseable {
 //        }
     }
 
-//    /**
-//     * @return the connection
-//     */
-//    public Connection getConnection() {
-//        return connection;
-//    }
-//    /**
-//     * @return the channel
-//     */
-//    public Channel getChannel() {
-//        return channel;
-//    }
-//    /**
-//     * @return the replyQueueName
-//     */
-//    public String getReplyQueueName() {
-//        return replyQueueName;
-//    }
     @Override
     public void close() throws IOException, TimeoutException {
 
@@ -111,7 +94,6 @@ public class SDIACaller implements AutoCloseable {
             connection = factory.newConnection();
 
             channel = connection.createChannel();
-            Map<String, Object> args = new HashMap<>();
             String replyQueueName = channel.queueDeclare().getQueue();
 
             //Build a correlation ID to distinguish responds 
@@ -135,8 +117,6 @@ public class SDIACaller implements AutoCloseable {
                     }
                 }
             });
-//        String resp = response.take();
-
             String resp = response.poll(timeOut, TimeUnit.MINUTES);
             Logger.getLogger(SDIACaller.class.getName()).log(Level.INFO, "Got response from qeue: {0}", getRequestQeueName());
             if (resp == null) {
@@ -165,6 +145,71 @@ public class SDIACaller implements AutoCloseable {
         return null;
     }
 
+    public String callAsync(Message r, String corrId) throws IOException, TimeoutException, InterruptedException, SIDIAExeption {
+        Channel channel = null;
+        Connection connection = null;
+        try {
+            String jsonInString = mapper.writeValueAsString(r);
+
+            int timeOut = 600;
+            if (getRequestQeueName().equals("planner")) {
+                timeOut = 60;
+            }
+            if (getRequestQeueName().equals("provisioner")) {
+                timeOut = 60;
+            }
+            connection = factory.newConnection();
+
+            channel = connection.createChannel();
+            String replyQueueName = "gen-" + corrId;
+            AMQP.Queue.DeclareOk declareOk = channel.queueDeclare(replyQueueName, false, false, true, null);
+
+            AMQP.BasicProperties props = new AMQP.BasicProperties.Builder()
+                    .correlationId(corrId)
+                    .expiration(String.valueOf(timeOut * 60000))
+                    .replyTo(replyQueueName)
+                    .build();
+            Logger.getLogger(SDIACaller.class.getName()).log(Level.INFO, "Sending to queue: {0}", getRequestQeueName());
+            channel.basicPublish("", getRequestQeueName(), props, jsonInString.getBytes("UTF-8"));
+            return replyQueueName;
+
+//            final BlockingQueue<String> response = new ArrayBlockingQueue(1);
+//            channel.basicConsume(replyQueueName, true, new DefaultConsumer(channel) {
+//                @Override
+//                public void handleDelivery(String consumerTag, Envelope envelope, 
+//                        AMQP.BasicProperties properties, byte[] body) throws IOException {
+//                    if (properties.getCorrelationId().equals(corrId)) {
+//                        response.offer(new String(body, "UTF-8"));
+//                    }
+//                }
+//            });
+//            String resp = response.poll(timeOut, TimeUnit.MINUTES);
+//            Logger.getLogger(SDIACaller.class.getName()).log(Level.INFO, "Got response from qeue: {0}", getRequestQeueName());
+//            if (resp == null) {
+//                throw new TimeoutException("Timeout on qeue: " + getRequestQeueName());
+//            }
+//            try {
+//                Message incomingMessage = mapper.readValue(resp, Message.class);
+//                if (incomingMessage.getErrorReport() != null) {
+//                    throw new SIDIAExeption(incomingMessage.getErrorReport());
+//                }
+//                return response;
+//            } catch (com.fasterxml.jackson.core.JsonParseException ex) {
+//                if (resp.contains("error")) {
+//                    Map<String, Object> error = new ObjectMapper().readValue(resp, HashMap.class);
+//                    throw new SIDIAExeption((String) error.get("error"));
+//                }
+//            }
+        } finally {
+            if (channel != null && channel.isOpen()) {
+                channel.close();
+            }
+            if (connection != null && connection.isOpen()) {
+                connection.close();
+            }
+        }
+    }
+
     /**
      * @return the requestQeueName
      */
@@ -177,5 +222,43 @@ public class SDIACaller implements AutoCloseable {
      */
     public void setRequestQeueName(String requestQeueName) {
         this.requestQeueName = requestQeueName;
+    }
+
+    public Message pollQueue(String corrId) throws IOException, TimeoutException, InterruptedException, SIDIAExeption {
+        Connection connection = null;
+        Channel channel = null;
+        String replyQueueName = "gen-" + corrId;
+        try {
+            connection = factory.newConnection();
+            channel = connection.createChannel();
+            GetResponse response = channel.basicGet(replyQueueName, true);
+            if (response != null) {
+                String body = new String(response.getBody());
+                try {
+                    Message incomingMessage = mapper.readValue(body, Message.class);
+                    if (incomingMessage.getErrorReport() != null) {
+                        throw new SIDIAExeption(incomingMessage.getErrorReport());
+                    }
+                    channel.queueDelete(replyQueueName);
+                    return incomingMessage;
+                } catch (com.fasterxml.jackson.core.JsonParseException ex) {
+                    if (body.contains("error")) {
+                        Map<String, Object> error = new ObjectMapper().readValue(body, HashMap.class);
+                        throw new SIDIAExeption((String) error.get("error"));
+                    }
+                }
+            }
+        } catch (IOException ex) {
+            Logger.getLogger(SDIACaller.class.getName()).log(Level.INFO, "Did not find queue: {0}", replyQueueName);
+            return null;
+        } finally {
+            if (channel != null && channel.isOpen()) {
+                channel.close();
+            }
+            if (connection != null && connection.isOpen()) {
+                connection.close();
+            }
+        }
+        return null;
     }
 }

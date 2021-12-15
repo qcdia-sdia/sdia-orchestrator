@@ -45,7 +45,7 @@ public class ToscaTemplateApiController implements ToscaTemplateApi {
     private ToscaTemplateService toscaTemplateService;
 
     @Autowired
-    private SDIAService dripService;
+    private SDIAService sdiaService;
 
     @org.springframework.beans.factory.annotation.Autowired
     public ToscaTemplateApiController(ObjectMapper objectMapper, HttpServletRequest request) {
@@ -60,7 +60,7 @@ public class ToscaTemplateApiController implements ToscaTemplateApi {
 //        String accept = request.getHeader("Accept");
 //        if (accept != null && accept.contains("text/plain")) {
         try {
-            dripService.delete(id, nodeName);
+            sdiaService.delete(id, nodeName);
             java.util.logging.Logger.getLogger(ToscaTemplateApiController.class.getName()).log(Level.INFO, "Returning delete id: " + id);
             return new ResponseEntity<>(id, HttpStatus.OK);
         } catch (IOException | ApiException | TypeExeption | TimeoutException | InterruptedException ex) {
@@ -83,7 +83,7 @@ public class ToscaTemplateApiController implements ToscaTemplateApi {
         List<String> ids = toscaTemplateService.getAllIds();
         try {
             for (String id : ids) {
-                dripService.delete(id, null);
+                sdiaService.delete(id, null);
             }
             return new ResponseEntity<>(HttpStatus.OK);
         } catch (IOException | ApiException | TypeExeption | TimeoutException | InterruptedException ex) {
@@ -94,17 +94,16 @@ public class ToscaTemplateApiController implements ToscaTemplateApi {
         } catch (MissingVMTopologyException ex) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         } catch (SIDIAExeption ex) {
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ex.getMessage());
         }
     }
 
     @Override
     public ResponseEntity<String> getToscaTemplateByID(@ApiParam(value = "ID of topolog template to return", required = true)
             @PathVariable("id") String id) {
-//        String accept = request.getHeader("Accept");
-//        if (accept != null && accept.contains("text/plain")) {
         try {
             java.util.logging.Logger.getLogger(ToscaTemplateApiController.class.getName()).log(Level.INFO, "Requestsed ID: {0}", id);
+            sdiaService.processQueue(id);
             String ymlStr = toscaTemplateService.findByID(id);
             return new ResponseEntity<>(ymlStr, HttpStatus.OK);
         } catch (NotFoundException | java.util.NoSuchElementException ex) {
@@ -113,11 +112,9 @@ public class ToscaTemplateApiController implements ToscaTemplateApi {
         } catch (JsonProcessingException ex) {
             java.util.logging.Logger.getLogger(ToscaTemplateApiController.class.getName()).log(Level.SEVERE, null, ex);
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        } catch (IOException | TimeoutException | InterruptedException | SIDIAExeption ex) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
-
-//        } else {
-//            return new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
-//        }
     }
 
     @Override
@@ -125,8 +122,6 @@ public class ToscaTemplateApiController implements ToscaTemplateApi {
             value = "ID of topolog template to return", required = true)
             @PathVariable("id") String id, @ApiParam(value = "file detail")
             @Valid @RequestPart("file") MultipartFile file) {
-//        String accept = request.getHeader("Accept");
-//        if (accept != null && accept.contains("text/plain")) {
         try {
             id = toscaTemplateService.updateToscaTemplateByID(id, file);
             return new ResponseEntity<>(id, HttpStatus.OK);
@@ -135,9 +130,6 @@ public class ToscaTemplateApiController implements ToscaTemplateApi {
             java.util.logging.Logger.getLogger(ToscaTemplateApiController.class.getName()).log(Level.SEVERE, null, e);
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
-//        } else {
-//            return new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
-//        }
     }
 
     @Override
