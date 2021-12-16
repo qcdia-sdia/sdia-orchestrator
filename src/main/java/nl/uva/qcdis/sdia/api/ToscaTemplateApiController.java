@@ -24,6 +24,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import javax.servlet.http.HttpServletRequest;
+import nl.uva.qcdis.sdia.commons.utils.Constants;
 import nl.uva.qcdis.sdia.model.Exceptions.MissingVMTopologyException;
 import nl.uva.qcdis.sdia.model.Exceptions.SIDIAExeption;
 import nl.uva.qcdis.sdia.model.Exceptions.TypeExeption;
@@ -103,17 +104,29 @@ public class ToscaTemplateApiController implements ToscaTemplateApi {
             @PathVariable("id") String id) {
         try {
             java.util.logging.Logger.getLogger(ToscaTemplateApiController.class.getName()).log(Level.INFO, "Requestsed ID: {0}", id);
-            sdiaService.processQueue(id);
+            Constants.NODE_STATES staus = sdiaService.processQueue(id);
             String ymlStr = toscaTemplateService.findByID(id);
-            return new ResponseEntity<>(ymlStr, HttpStatus.OK);
+            switch (staus) {
+                case CREATED:
+                    return new ResponseEntity<>(ymlStr, HttpStatus.CREATED);
+                case CREATING:
+                    return new ResponseEntity<>(ymlStr, HttpStatus.ACCEPTED);
+                default:
+                    return new ResponseEntity<>(ymlStr, HttpStatus.OK);
+            }
+
         } catch (NotFoundException | java.util.NoSuchElementException ex) {
             java.util.logging.Logger.getLogger(ToscaTemplateApiController.class.getName()).log(Level.WARNING, null, ex);
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         } catch (JsonProcessingException ex) {
             java.util.logging.Logger.getLogger(ToscaTemplateApiController.class.getName()).log(Level.SEVERE, null, ex);
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-        } catch (IOException | TimeoutException | InterruptedException | SIDIAExeption ex) {
+        } catch (IOException | TimeoutException | InterruptedException ex) {
+            java.util.logging.Logger.getLogger(ToscaTemplateApiController.class.getName()).log(Level.SEVERE, null, ex);
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }catch(SIDIAExeption ex){
+            java.util.logging.Logger.getLogger(ToscaTemplateApiController.class.getName()).log(Level.SEVERE, null, ex);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ex.getMessage());
         }
     }
 

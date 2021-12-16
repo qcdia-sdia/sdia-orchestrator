@@ -19,6 +19,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import nl.uva.qcdis.sdia.commons.utils.Constants;
 import nl.uva.qcdis.sdia.model.Exceptions.SIDIAExeption;
 import nl.uva.qcdis.sdia.model.Message;
 import org.springframework.stereotype.Service;
@@ -224,10 +225,21 @@ public class SDIACaller implements AutoCloseable {
         this.requestQeueName = requestQeueName;
     }
 
-    public Message pollQueue(String corrId) throws IOException, TimeoutException, InterruptedException, SIDIAExeption {
+    public Message poll(String corrId) throws IOException, TimeoutException, InterruptedException, SIDIAExeption {
+        String replyQueueName = "gen-" + corrId;
+        Message message = pollQueue(replyQueueName);
+        if (message != null && message.getStatus().equals(Constants.NODE_STATES.CREATING)) {
+            String statusQueueName = "status-gen-" + corrId;
+//            message = pollQueue(statusQueueName);
+        }
+        return message;
+    }
+
+    public Message pollQueue(String replyQueueName) throws IOException, TimeoutException, InterruptedException, SIDIAExeption {
         Connection connection = null;
         Channel channel = null;
-        String replyQueueName = "gen-" + corrId;
+//        String replyQueueName = "gen-" + corrId;
+//        String statusQueueName = "status-gen-" + corrId;
         try {
             connection = factory.newConnection();
             channel = connection.createChannel();
@@ -236,10 +248,12 @@ public class SDIACaller implements AutoCloseable {
                 String body = new String(response.getBody());
                 try {
                     Message incomingMessage = mapper.readValue(body, Message.class);
+                    channel.queueDelete(replyQueueName);
+                    incomingMessage.setStatus(Constants.NODE_STATES.CREATED);
                     if (incomingMessage.getErrorReport() != null) {
+                        incomingMessage.setStatus(Constants.NODE_STATES.FAILED);
                         throw new SIDIAExeption(incomingMessage.getErrorReport());
                     }
-                    channel.queueDelete(replyQueueName);
                     return incomingMessage;
                 } catch (com.fasterxml.jackson.core.JsonParseException ex) {
                     if (body.contains("error")) {
@@ -247,6 +261,10 @@ public class SDIACaller implements AutoCloseable {
                         throw new SIDIAExeption((String) error.get("error"));
                     }
                 }
+            } else {
+                Message processing = new Message();
+                processing.setStatus(Constants.NODE_STATES.CREATING);
+                return processing;
             }
         } catch (IOException ex) {
             Logger.getLogger(SDIACaller.class.getName()).log(Level.INFO, "Did not find queue: {0}", replyQueueName);

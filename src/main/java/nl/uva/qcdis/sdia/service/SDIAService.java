@@ -264,11 +264,18 @@ public class SDIAService {
     return provisionerQueueName;
     }
 
-    public void processQueue(String id) throws IOException, TimeoutException, InterruptedException, SIDIAExeption {
+    public NODE_STATES processQueue(String id) throws IOException, TimeoutException, InterruptedException, SIDIAExeption {
         caller.init();
-        Message incoming = caller.pollQueue(id);
-        if(incoming!=null){
+        Message incoming = caller.poll(id);
+        if (incoming!=null && incoming.getStatus().equals(NODE_STATES.CREATED)){
             String newID = toscaTemplateService.updateToscaTemplateByID(id, incoming.getToscaTemplate());
+            return incoming.getStatus();
+        }
+        if (incoming!=null){
+            return incoming.getStatus();
+        }
+        else{
+            return NODE_STATES.UNDEFINED;
         }
     }
 }
