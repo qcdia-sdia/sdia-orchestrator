@@ -111,6 +111,8 @@ public class ToscaTemplateApiController implements ToscaTemplateApi {
                     return new ResponseEntity<>(ymlStr, HttpStatus.CREATED);
                 case CREATING:
                     return new ResponseEntity<>(ymlStr, HttpStatus.ACCEPTED);
+                case FAILED:
+                    return new ResponseEntity<>(ymlStr, HttpStatus.INTERNAL_SERVER_ERROR);
                 default:
                     return new ResponseEntity<>(ymlStr, HttpStatus.OK);
             }
