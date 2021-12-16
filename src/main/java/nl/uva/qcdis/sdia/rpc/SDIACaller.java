@@ -229,6 +229,7 @@ public class SDIACaller implements AutoCloseable {
         Connection connection = null;
         Channel channel = null;
         String replyQueueName = "gen-" + corrId;
+        String statusQueueName = "status-gen-" + corrId;
         try {
             connection = factory.newConnection();
             channel = connection.createChannel();
@@ -237,11 +238,13 @@ public class SDIACaller implements AutoCloseable {
                 String body = new String(response.getBody());
                 try {
                     Message incomingMessage = mapper.readValue(body, Message.class);
+                    channel.queueDelete(replyQueueName);
+                    channel.queueDelete(statusQueueName);
+                    incomingMessage.setStatus(Constants.NODE_STATES.CREATED);
                     if (incomingMessage.getErrorReport() != null) {
+                        incomingMessage.setStatus(Constants.NODE_STATES.FAILED);
                         throw new SIDIAExeption(incomingMessage.getErrorReport());
                     }
-                    channel.queueDelete(replyQueueName);
-                    incomingMessage.setStatus(Constants.NODE_STATES.CREATED);
                     return incomingMessage;
                 } catch (com.fasterxml.jackson.core.JsonParseException ex) {
                     if (body.contains("error")) {
@@ -249,7 +252,7 @@ public class SDIACaller implements AutoCloseable {
                         throw new SIDIAExeption((String) error.get("error"));
                     }
                 }
-            }else{
+            } else {
                 Message processing = new Message();
                 processing.setStatus(Constants.NODE_STATES.CREATING);
                 return processing;
