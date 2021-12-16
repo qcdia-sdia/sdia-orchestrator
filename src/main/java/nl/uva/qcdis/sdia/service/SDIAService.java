@@ -264,18 +264,23 @@ public class SDIAService {
     return provisionerQueueName;
     }
 
-    public NODE_STATES processQueue(String id) throws IOException, TimeoutException, InterruptedException, SIDIAExeption {
-        caller.init();
-        Message incoming = caller.poll(id);
-        if (incoming!=null && incoming.getStatus().equals(NODE_STATES.CREATED)){
-            String newID = toscaTemplateService.updateToscaTemplateByID(id, incoming.getToscaTemplate());
-            return incoming.getStatus();
-        }
-        if (incoming!=null){
-            return incoming.getStatus();
-        }
-        else{
-            return NODE_STATES.UNDEFINED;
+    public NODE_STATES processQueue(String id) throws IOException, TimeoutException, InterruptedException, SIDIAExeption, JsonProcessingException, NotFoundException, ApiException, TypeExeption {
+        try {
+                caller.init();
+                Message incoming = caller.poll(id);
+                if (incoming!=null && incoming.getToscaTemplate()!=null){
+                    String newID = toscaTemplateService.updateToscaTemplateByID(id, incoming.getToscaTemplate());
+                    return incoming.getStatus();
+                }
+                if (incoming!=null && incoming.getToscaTemplate()==null){
+                    return incoming.getStatus();
+                }
+            else{
+                return NODE_STATES.UNDEFINED;
+            }
+        } catch (SIDIAExeption ex) {
+            toscaTemplateService.deleteByID(id);
+            throw  ex;
         }
     }
 }

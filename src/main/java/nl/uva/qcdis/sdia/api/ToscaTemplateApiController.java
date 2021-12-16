@@ -121,7 +121,7 @@ public class ToscaTemplateApiController implements ToscaTemplateApi {
         } catch (JsonProcessingException ex) {
             java.util.logging.Logger.getLogger(ToscaTemplateApiController.class.getName()).log(Level.SEVERE, null, ex);
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-        } catch (IOException | TimeoutException | InterruptedException ex) {
+        } catch (IOException | TimeoutException | InterruptedException | ApiException | TypeExeption ex) {
             java.util.logging.Logger.getLogger(ToscaTemplateApiController.class.getName()).log(Level.SEVERE, null, ex);
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }catch(SIDIAExeption ex){
