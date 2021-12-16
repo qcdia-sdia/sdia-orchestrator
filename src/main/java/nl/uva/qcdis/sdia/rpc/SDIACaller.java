@@ -225,11 +225,21 @@ public class SDIACaller implements AutoCloseable {
         this.requestQeueName = requestQeueName;
     }
 
-    public Message pollQueue(String corrId) throws IOException, TimeoutException, InterruptedException, SIDIAExeption {
+    public Message poll(String corrId) throws IOException, TimeoutException, InterruptedException, SIDIAExeption {
+        String replyQueueName = "gen-" + corrId;
+        Message message = pollQueue(replyQueueName);
+        if (message != null && message.getStatus().equals(Constants.NODE_STATES.CREATING)) {
+            String statusQueueName = "status-gen-" + corrId;
+//            message = pollQueue(statusQueueName);
+        }
+        return message;
+    }
+
+    public Message pollQueue(String replyQueueName) throws IOException, TimeoutException, InterruptedException, SIDIAExeption {
         Connection connection = null;
         Channel channel = null;
-        String replyQueueName = "gen-" + corrId;
-        String statusQueueName = "status-gen-" + corrId;
+//        String replyQueueName = "gen-" + corrId;
+//        String statusQueueName = "status-gen-" + corrId;
         try {
             connection = factory.newConnection();
             channel = connection.createChannel();
@@ -239,7 +249,6 @@ public class SDIACaller implements AutoCloseable {
                 try {
                     Message incomingMessage = mapper.readValue(body, Message.class);
                     channel.queueDelete(replyQueueName);
-                    channel.queueDelete(statusQueueName);
                     incomingMessage.setStatus(Constants.NODE_STATES.CREATED);
                     if (incomingMessage.getErrorReport() != null) {
                         incomingMessage.setStatus(Constants.NODE_STATES.FAILED);
