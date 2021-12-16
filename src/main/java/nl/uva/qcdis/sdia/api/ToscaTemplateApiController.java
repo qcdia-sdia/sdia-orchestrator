@@ -107,8 +107,10 @@ public class ToscaTemplateApiController implements ToscaTemplateApi {
             Constants.NODE_STATES staus = sdiaService.processQueue(id);
             String ymlStr = toscaTemplateService.findByID(id);
             switch (staus) {
+                case CREATED:
+                    return new ResponseEntity<>(ymlStr, HttpStatus.CREATED);
                 case CREATING:
-                    return new ResponseEntity<>(ymlStr, HttpStatus.PROCESSING);
+                    return new ResponseEntity<>(ymlStr, HttpStatus.ACCEPTED);
                 default:
                     return new ResponseEntity<>(ymlStr, HttpStatus.OK);
             }
