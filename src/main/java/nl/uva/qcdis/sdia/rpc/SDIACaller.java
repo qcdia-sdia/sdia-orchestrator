@@ -164,7 +164,7 @@ public class SDIACaller implements AutoCloseable {
             channel = connection.createChannel();
             String replyQueueName = "gen-" + corrId;
             AMQP.Queue.DeclareOk declareOk = channel.queueDeclare(replyQueueName, false, false, true, null);
-
+            
             AMQP.BasicProperties props = new AMQP.BasicProperties.Builder()
                     .correlationId(corrId)
                     .expiration(String.valueOf(timeOut * 60000))
@@ -173,34 +173,6 @@ public class SDIACaller implements AutoCloseable {
             Logger.getLogger(SDIACaller.class.getName()).log(Level.INFO, "Sending to queue: {0}", getRequestQeueName());
             channel.basicPublish("", getRequestQeueName(), props, jsonInString.getBytes("UTF-8"));
             return replyQueueName;
-
-//            final BlockingQueue<String> response = new ArrayBlockingQueue(1);
-//            channel.basicConsume(replyQueueName, true, new DefaultConsumer(channel) {
-//                @Override
-//                public void handleDelivery(String consumerTag, Envelope envelope, 
-//                        AMQP.BasicProperties properties, byte[] body) throws IOException {
-//                    if (properties.getCorrelationId().equals(corrId)) {
-//                        response.offer(new String(body, "UTF-8"));
-//                    }
-//                }
-//            });
-//            String resp = response.poll(timeOut, TimeUnit.MINUTES);
-//            Logger.getLogger(SDIACaller.class.getName()).log(Level.INFO, "Got response from qeue: {0}", getRequestQeueName());
-//            if (resp == null) {
-//                throw new TimeoutException("Timeout on qeue: " + getRequestQeueName());
-//            }
-//            try {
-//                Message incomingMessage = mapper.readValue(resp, Message.class);
-//                if (incomingMessage.getErrorReport() != null) {
-//                    throw new SIDIAExeption(incomingMessage.getErrorReport());
-//                }
-//                return response;
-//            } catch (com.fasterxml.jackson.core.JsonParseException ex) {
-//                if (resp.contains("error")) {
-//                    Map<String, Object> error = new ObjectMapper().readValue(resp, HashMap.class);
-//                    throw new SIDIAExeption((String) error.get("error"));
-//                }
-//            }
         } finally {
             if (channel != null && channel.isOpen()) {
                 channel.close();
