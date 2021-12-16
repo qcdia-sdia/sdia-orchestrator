@@ -266,12 +266,12 @@ public class SDIAService {
 
     public NODE_STATES processQueue(String id) throws IOException, TimeoutException, InterruptedException, SIDIAExeption {
         caller.init();
-        Message incoming = caller.pollQueue(id);
+        Message incoming = caller.poll(id);
         if (incoming!=null && incoming.getStatus().equals(NODE_STATES.CREATED)){
             String newID = toscaTemplateService.updateToscaTemplateByID(id, incoming.getToscaTemplate());
             return incoming.getStatus();
         }
-        if (incoming!=null && !incoming.getStatus().equals(NODE_STATES.CREATED)){
+        if (incoming!=null){
             return incoming.getStatus();
         }
         else{
