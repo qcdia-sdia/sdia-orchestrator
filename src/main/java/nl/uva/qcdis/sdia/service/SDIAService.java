@@ -179,6 +179,7 @@ public class SDIAService {
         }
         return true;
     }
+
     public String deployAsync(String id, List<String> nodeNames) throws NotFoundException, IOException, ApiException, TimeoutException, InterruptedException, SIDIAExeption {
         ToscaTemplate toscaTemplate = initExecution(id);
         //If no nodes are specified deploy all applications
