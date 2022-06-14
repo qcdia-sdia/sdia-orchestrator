@@ -58,7 +58,7 @@ public class SDIAService {
     private String deployerQueueName;
     
     public static final String[] ANSIBLE_WF_PROVIDERS = new String[]{"INFN", 
-        "CESGA","EGI","Azure"};
+        "CESGA","OpenStack","Azure"};
     
     private String executeAsync(ToscaTemplate toscaTemplate, String requestQeueName) throws IOException, TimeoutException, InterruptedException, SIDIAExeption{
         try {
@@ -115,7 +115,7 @@ public class SDIAService {
         return credentials.get(0);
     }
 
-    protected ToscaTemplate addCredentials(ToscaTemplate toscaTemplate) throws MissingCredentialsException, ApiException, TypeExeption, MissingVMTopologyException, JsonProcessingException {
+    protected ToscaTemplate addCredentials(ToscaTemplate toscaTemplate) throws MissingCredentialsException, ApiException, TypeExeption, MissingVMTopologyException {
         List<NodeTemplateMap> vmTopologies = helper.getVMTopologyTemplates();
         if (vmTopologies == null) {
             throw new MissingVMTopologyException("ToscaTemplate: " + toscaTemplate + " has no VM topology");
@@ -139,12 +139,12 @@ public class SDIAService {
         return toscaTemplate;
     }
 
-    public String plan(String id) throws ApiException, NotFoundException, IOException, JsonProcessingException, TimeoutException, InterruptedException, SIDIAExeption {
+    public String plan(String id) throws ApiException, NotFoundException, IOException, TimeoutException, InterruptedException, SIDIAExeption {
         ToscaTemplate toscaTemplate = initExecution(id);
         return execute(toscaTemplate, plannerQueueName);
     }
 
-    public String provision(String id) throws MissingCredentialsException, ApiException, TypeExeption, IOException, JsonProcessingException, TimeoutException, InterruptedException, NotFoundException, MissingVMTopologyException, SIDIAExeption {
+    public String provision(String id) throws MissingCredentialsException, ApiException, TypeExeption, IOException, TimeoutException, InterruptedException, NotFoundException, MissingVMTopologyException, SIDIAExeption {
         ToscaTemplate toscaTemplate = initExecution(id);
         toscaTemplate = addCredentials(toscaTemplate);
         //Update ToscaTemplate so we can include the credentials
@@ -161,7 +161,7 @@ public class SDIAService {
     }
 
     protected ToscaTemplate setDesieredSate(ToscaTemplate toscaTemplate,
-            NodeTemplateMap node, NODE_STATES nodeState) throws IOException, JsonProcessingException, ApiException {
+            NodeTemplateMap node, NODE_STATES nodeState)  {
         NODE_STATES currentState = helper.getNodeCurrentState(node);
         NODE_STATES desiredState = helper.getNodeDesiredState(node);
         node = helper.setNodeDesiredState(node, nodeState);
@@ -174,14 +174,12 @@ public class SDIAService {
     }
 
     private boolean needsCredentials(String provider) {
-        switch (provider) {
-            case "local":
-                return false;
-            default:
-                return true;
+        if (provider.equals("local")){
+            return false;
         }
+        return true;
     }
-    public String deployAsync(String id, List<String> nodeNames) throws JsonProcessingException, NotFoundException, IOException, ApiException, TimeoutException, InterruptedException, SIDIAExeption {
+    public String deployAsync(String id, List<String> nodeNames) throws NotFoundException, IOException, ApiException, TimeoutException, InterruptedException, SIDIAExeption {
         ToscaTemplate toscaTemplate = initExecution(id);
         //If no nodes are specified deploy all applications
         if (nodeNames == null || nodeNames.isEmpty()) {
@@ -195,7 +193,7 @@ public class SDIAService {
         return savedID;
     }
 
-    public String deploy(String id, List<String> nodeNames) throws JsonProcessingException, NotFoundException, IOException, ApiException, TimeoutException, InterruptedException, SIDIAExeption {
+    public String deploy(String id, List<String> nodeNames) throws NotFoundException, IOException, ApiException, TimeoutException, InterruptedException, SIDIAExeption {
         ToscaTemplate toscaTemplate = initExecution(id);
         //If no nodes are specified deploy all applications
         if (nodeNames == null || nodeNames.isEmpty()) {
@@ -209,7 +207,7 @@ public class SDIAService {
         return savedID;
     }
 
-    protected ToscaTemplate initExecution(String id) throws JsonProcessingException, NotFoundException, IOException, ApiException {
+    protected ToscaTemplate initExecution(String id) throws NotFoundException, IOException, ApiException {
         String ymlToscaTemplate = toscaTemplateService.findByID(id);
         Logger.getLogger(SDIAService.class.getName()).log(Level.FINE, "Found ToscaTemplate with id: {0}", id);
         ToscaTemplate toscaTemplate = toscaTemplateService.getYaml2ToscaTemplate(ymlToscaTemplate);
@@ -217,7 +215,7 @@ public class SDIAService {
         return toscaTemplate;
     }
 
-    public String delete(String id, List<String> nodeNames) throws NotFoundException, IOException, JsonProcessingException, ApiException, TypeExeption, TimeoutException, InterruptedException, MissingVMTopologyException, SIDIAExeption {
+    public String delete(String id, List<String> nodeNames) throws NotFoundException, IOException, ApiException, TypeExeption, TimeoutException, InterruptedException, MissingVMTopologyException, SIDIAExeption {
         ToscaTemplate toscaTemplate = initExecution(id);
         boolean nothingToDelete = true;
         //If no nodes are specified delete all the infrastructure
@@ -238,10 +236,7 @@ public class SDIAService {
                 }
             }
             return id;
-        } else {
-
         }
-
         return null;
     }
 
@@ -255,7 +250,7 @@ public class SDIAService {
             Map<String, Object> interfaces = vmTopologyMap.getNodeTemplate().getInterfaces();
             Object ec2Interface = interfaces.get("EC2");
             for(String osProvider: ANSIBLE_WF_PROVIDERS){
-                if(osProvider.toUpperCase().equals(provider.toUpperCase()) || ec2Interface!=null){
+                if(osProvider.equalsIgnoreCase(provider.toUpperCase()) || ec2Interface!=null){
                     return deployerQueueName;
                 }
             }
@@ -264,7 +259,7 @@ public class SDIAService {
     return provisionerQueueName;
     }
 
-    public NODE_STATES processQueue(String id) throws IOException, TimeoutException, InterruptedException, SIDIAExeption, JsonProcessingException, NotFoundException, ApiException, TypeExeption {
+    public NODE_STATES processQueue(String id) throws IOException, TimeoutException, InterruptedException, SIDIAExeption, NotFoundException, ApiException, TypeExeption {
         try {
                 caller.init();
                 Message incoming = caller.poll(id);
